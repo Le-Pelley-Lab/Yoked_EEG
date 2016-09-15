@@ -645,9 +645,9 @@ global MainWindow white address runEEG exptSession
 
 if exptSession == 2
     if nextBlock == 0 %next block is odd (pre-training block)
-        breakText = ['Time for a break\n\nSit back, relax for a moment! You will be able to carry on in ', num2str(breakDur),' seconds\n\n\nIn the next block, your task will be to search for the UNIQUE SHAPE. The target MAY or MAY NOT be coloured.\n\n\nRemember that the faster you make correct responses, the more you will earn in this task!'];
+        breakText = ['Time for a break\n\nSit back, relax for a moment! The experimenter will restart the task in a few moments\n\n\nIn the next block, the target MAY or MAY NOT be coloured.\n\n\nRemember that the faster you make correct responses, the more you will earn in this task!'];
     else %next block is even (post-training block)
-        breakText = ['Time for a break\n\nSit back, relax for a moment! You will be able to carry on in ', num2str(breakDur),' seconds\n\n\nIn the next block, your task will be to search for the DIAMOND. The target WILL NEVER be coloured.\n\n\nRemember that the faster you make correct responses, the more you will earn in this task!'];
+        breakText = ['Time for a break\n\nSit back, relax for a moment! The experimenter will restart the task in a few moments\n\n\nIn the next block, the target WILL NEVER be coloured.\n\n\nRemember that the faster you make correct responses, the more you will earn in this task!'];
     end
 else
      breakText = ['Time for a break\n\nSit back, relax for a moment! You will be able to carry on in ', num2str(breakDur),' seconds\n\n\nRemember that the faster you make correct responses, the more you will earn in this task!'];
