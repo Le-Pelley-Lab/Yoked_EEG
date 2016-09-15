@@ -299,9 +299,9 @@ for trial = 1 : numTrials
     for i = 1 : stimLocs
         lineOrientation(i) = round(rand);
         if lineOrientation(i) == 0
-            Screen('DrawLine', stimWindow, gray, lineLeft(i,1), lineLeft(i,2), lineLeft(i,3), lineLeft(i,4), line_pen);
+            Screen('DrawLine', stimWindow, gray, lineHorz(i,1), lineHorz(i,2), lineHorz(i,3), lineHorz(i,4), line_pen);
         else
-            Screen('DrawLine', stimWindow, gray, lineRight(i,1), lineRight(i,2), lineRight(i,3), lineRight(i,4), line_pen);
+            Screen('DrawLine', stimWindow, gray, lineVert(i,1), lineVert(i,2), lineVert(i,3), lineVert(i,4), line_pen);
         end
     end
     
@@ -439,21 +439,21 @@ for trial = 1 : numTrials
     
     st = Screen(MainWindow, 'Flip'); if runEEG == 1; outp(address, triggerOn); end % Send ON trigger    % Present stimuli, and record start time (st) when they are presented.
     
-    image = Screen('GetImage', MainWindow, [scr_centre(1)-300 scr_centre(2)-300 scr_centre(1)+300 scr_centre(2)+300] );
-    
-    if singletonType == 1
-        if distractLoc == targetLoc
-            imwrite(image, 'exampleDiamondTargetColoured.jpg') %400 x 400
-        else
-            imwrite(image, 'exampleDiamondTarget.jpg')
-        end
-    else
-       if distractLoc == targetLoc
-           imwrite(image, 'exampleCircleTargetColoured.jpg') 
-       else
-           imwrite(image, 'exampleCircleTarget.jpg')
-       end
-    end
+%     image = Screen('GetImage', MainWindow, [scr_centre(1)-450 scr_centre(2)-450 scr_centre(1)+450 scr_centre(2)+450] );
+%     
+%     if singletonType == 1
+%         if distractLoc == targetLoc
+%             imwrite(image, 'exampleDiamondTargetColoured.jpg') %400 x 400
+%         else
+%             imwrite(image, 'exampleDiamondTarget.jpg')
+%         end
+%     else
+%        if distractLoc == targetLoc
+%            imwrite(image, 'exampleCircleTargetColoured.jpg') 
+%        else
+%            imwrite(image, 'exampleCircleTarget.jpg')
+%        end
+%     end
     
     %%% FOR SCREENSHOTS
     

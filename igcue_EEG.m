@@ -20,7 +20,7 @@ global address nf runEEG
 
 nf = java.text.DecimalFormat;
 
-screenNum = 0;
+screenNum = 1;
 
 
 zeroPayRT = 1000;       % 1000

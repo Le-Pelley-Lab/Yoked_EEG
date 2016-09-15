@@ -299,9 +299,9 @@ for trial = 1 : numTrials
     for i = 1 : stimLocs
         lineOrientation(i) = round(rand);
         if lineOrientation(i) == 0
-            Screen('DrawLine', stimWindow, gray, lineLeft(i,1), lineLeft(i,2), lineLeft(i,3), lineLeft(i,4), line_pen);
+            Screen('DrawLine', stimWindow, gray, lineHorz(i,1), lineHorz(i,2), lineHorz(i,3), lineHorz(i,4), line_pen);
         else
-            Screen('DrawLine', stimWindow, gray, lineRight(i,1), lineRight(i,2), lineRight(i,3), lineRight(i,4), line_pen);
+            Screen('DrawLine', stimWindow, gray, lineVert(i,1), lineVert(i,2), lineVert(i,3), lineVert(i,4), line_pen);
         end
     end
     
@@ -439,21 +439,21 @@ for trial = 1 : numTrials
     
     st = Screen(MainWindow, 'Flip'); if runEEG == 1; outp(address, triggerOn); end % Send ON trigger    % Present stimuli, and record start time (st) when they are presented.
     
-    image = Screen('GetImage', MainWindow, [scr_centre(1)-300 scr_centre(2)-300 scr_centre(1)+300 scr_centre(2)+300] );
-    
-    if singletonType == 1
-        if distractLoc == targetLoc
-            imwrite(image, 'exampleDiamondTargetColoured.jpg') %400 x 400
-        else
-            imwrite(image, 'exampleDiamondTarget.jpg')
-        end
-    else
-       if distractLoc == targetLoc
-           imwrite(image, 'exampleCircleTargetColoured.jpg') 
-       else
-           imwrite(image, 'exampleCircleTarget.jpg')
-       end
-    end
+%     image = Screen('GetImage', MainWindow, [scr_centre(1)-450 scr_centre(2)-450 scr_centre(1)+450 scr_centre(2)+450] );
+%     
+%     if singletonType == 1
+%         if distractLoc == targetLoc
+%             imwrite(image, 'exampleDiamondTargetColoured.jpg') %400 x 400
+%         else
+%             imwrite(image, 'exampleDiamondTarget.jpg')
+%         end
+%     else
+%        if distractLoc == targetLoc
+%            imwrite(image, 'exampleCircleTargetColoured.jpg') 
+%        else
+%            imwrite(image, 'exampleCircleTarget.jpg')
+%        end
+%     end
     
     %%% FOR SCREENSHOTS
     
@@ -551,7 +551,7 @@ for trial = 1 : numTrials
     
     while GetSecs-et < onscreenAfterResponse
         % wait until 100ms after response is registered before presenting
-        % feedback
+        % feedback. Check using EEG triggers.
     end
     
     Screen('Flip', MainWindow); if runEEG == 1; outp(address, triggerFB); end
@@ -645,9 +645,9 @@ global MainWindow white address runEEG exptSession
 
 if exptSession == 2
     if nextBlock == 0 %next block is odd (pre-training block)
-        breakText = ['Time for a break\n\nSit back, relax for a moment! You will be able to carry on in ', num2str(breakDur),' seconds\n\n\nIn the next block, your task will be to search for the UNIQUE SHAPE. The target MAY or MAY NOT be coloured.\n\n\nRemember that the faster you make correct responses, the more you will earn in this task!'];
+        breakText = ['Time for a break\n\nSit back, relax for a moment! The experimenter will restart the task in a few moments\n\n\nIn the next block, the target MAY or MAY NOT be coloured.\n\n\nRemember that the faster you make correct responses, the more you will earn in this task!'];
     else %next block is even (post-training block)
-        breakText = ['Time for a break\n\nSit back, relax for a moment! You will be able to carry on in ', num2str(breakDur),' seconds\n\n\nIn the next block, your task will be to search for the DIAMOND. The target WILL NEVER be coloured.\n\n\nRemember that the faster you make correct responses, the more you will earn in this task!'];
+        breakText = ['Time for a break\n\nSit back, relax for a moment! The experimenter will restart the task in a few moments\n\n\nIn the next block, the target WILL NEVER be coloured.\n\n\nRemember that the faster you make correct responses, the more you will earn in this task!'];
     end
 else
      breakText = ['Time for a break\n\nSit back, relax for a moment! You will be able to carry on in ', num2str(breakDur),' seconds\n\n\nRemember that the faster you make correct responses, the more you will earn in this task!'];
