@@ -573,7 +573,7 @@ for trial = 1 : numTrials
         
         if mod(trial, exptTrialsPerBlock) == 0
             if exptSession == 2
-                nextBlockType = rem(b,2) + 1;
+                nextBlockType = rem(block,2) + 1;
             else
                 nextBlockType = 1;
             end
@@ -586,7 +586,7 @@ for trial = 1 : numTrials
         
         if (mod(trial, exptTrialsBeforeBreak) == 0 && trial ~= numTrials);
             save(datafilename, 'DATA');
-            take_a_break(rem(b,2), breakDuration, initialPause);
+            take_a_break(rem(block,2), breakDuration, initialPause);
             trials_since_break = 0;
         end
         
