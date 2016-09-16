@@ -45,11 +45,13 @@ global MainWindow scr_centre black white
 
 imaLDcoloured=imread('exampleDiamondTarget.jpg', 'jpg');
 imaRDcoloured = imread('exampleCircleTarget.jpg', 'jpg');
-imaLTcoloured=imread('exampleDiamondTargetColoured.jpg', 'jpg');
-imaRTcoloured = imread('exampleCircleTargetColoured.jpg', 'jpg');
+imaLDcolouredTarget=imread('exampleDiamondTarget-T.jpg', 'jpg');
+imaRDcolouredTarget = imread('exampleCircleTarget-T.jpg', 'jpg');
+imaLTcolouredTarget=imread('exampleDiamondTargetColoured-T.jpg', 'jpg');
+imaRTcolouredTarget = imread('exampleCircleTargetColoured-T.jpg', 'jpg');
 gap = 200;
-y = 400;
-x = 400;
+y = 500;
+x = 500;
 
 exImageRectLeft = [scr_centre(1) - gap/2 - x    scr_centre(2)    scr_centre(1) - gap/2    scr_centre(2) + y];
 exImageRectRight = [scr_centre(1) + gap/2    scr_centre(2)    scr_centre(1) + gap/2 + x    scr_centre(2) + y];
@@ -66,12 +68,15 @@ instrBox_height = instrBox(4) - instrBox(2);
 textTop = 100;
 destInstrBox = [scr_centre(1) - instrBox_width / 2   textTop   scr_centre(1) + instrBox_width / 2   textTop +  instrBox_height];
 Screen('DrawTexture', MainWindow, instrWin, instrBox, destInstrBox);
-if instrTrial < 3
+if instrTrial < 2
     Screen('PutImage', MainWindow, imaLDcoloured, exImageRectLeft); % put left image on screen
     Screen('PutImage', MainWindow, imaRDcoloured, exImageRectRight); % put right image on screen
+elseif instrTrial == 2
+    Screen('PutImage', MainWindow, imaLDcolouredTarget, exImageRectLeft); % put left image on screen
+    Screen('PutImage', MainWindow, imaRDcolouredTarget, exImageRectRight); % put right image on screen
 else
-    Screen('PutImage', MainWindow, imaLTcoloured, exImageRectLeft); % put left image on screen
-    Screen('PutImage', MainWindow, imaRTcoloured, exImageRectRight); % put right image on screen
+    Screen('PutImage', MainWindow, imaLTcolouredTarget, exImageRectLeft); % put left image on screen
+    Screen('PutImage', MainWindow, imaRTcolouredTarget, exImageRectRight); % put right image on screen
 end
 
 Screen(MainWindow, 'Flip');
@@ -80,8 +85,8 @@ if instrTrial == 2
     
     Screen('DrawTexture', MainWindow, instrWin, instrBox, destInstrBox);
     
-    Screen('PutImage', MainWindow, imaLTcoloured, exImageRectLeft); % put left image on screen
-    Screen('PutImage', MainWindow, imaRTcoloured, exImageRectRight); % put right image on screen
+    Screen('PutImage', MainWindow, imaLTcolouredTarget, exImageRectLeft); % put left image on screen
+    Screen('PutImage', MainWindow, imaRTcolouredTarget, exImageRectRight); % put right image on screen
     
     RestrictKeysForKbCheck(KbName('Space'));   % Only accept spacebar
     KbWait([], 2);
