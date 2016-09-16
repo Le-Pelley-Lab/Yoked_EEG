@@ -550,12 +550,11 @@ for trial = 1 : numTrials
     Screen('DrawTexture', MainWindow, fixationTex, [], fixRect);
     
     zz = 0;
-    while GetSecs-et < onscreenAfterResponse
-        % wait until 100ms after response is registered before presenting
-        % feedback. Check using EEG triggers.
-        zz = zz + 1;
-    end
     
+    WaitSecs(onscreenAfterResponse-(GetSecs-et));
+    % wait until 100ms after response is registered before presenting
+    % feedback. Check using EEG triggers.
+
     Screen('Flip', MainWindow); if runEEG == 1; outp(address, triggerFB); end
     if correct == 0
         WaitSecs(correctFBDuration(exptPhase + 1));
