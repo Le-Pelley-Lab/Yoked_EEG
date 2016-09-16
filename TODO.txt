@@ -1,0 +1,7 @@
+Still to do for EEG Yoked:
+
+- Make sure that unique shape target for both sessions
+- Increase practice for session 2 to ~30 trials for eye movement practice
+- Check target positions for codes + proportions
+- Breaks experimenter controlled
+- Smaller 5s breaks every few trials?

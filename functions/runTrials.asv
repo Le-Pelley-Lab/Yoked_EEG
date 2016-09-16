@@ -194,9 +194,9 @@ trialCounter = 0;
 block = 1;
 trials_since_break = 0;
 
-rightPos = [7:10];
-leftPos = [2:5];
-midlinePos = [1 6];
+rightPos = [5 6];
+leftPos = [2 3];
+midlinePos = [1 4];
 
 RestrictKeysForKbCheck([KbName('4'), KbName('5')]);   % Only accept keypresses from numpad keys 4 and 5
 
