@@ -1,5 +1,5 @@
 
-function exptInstructionsSession1()
+function exptInstructionsSession2()
 
 global keyCounterbal
 global MainWindow white
@@ -17,7 +17,7 @@ else
     word2 = 'HORIZONTAL';
 end
 
-instructStr1 = ['The rest of this experiment is similar to the trials you have just completed. On each trial, you should respond to the line that is contained inside the UNIQUE SHAPE.\n\nIf the line is ', word1,', you should press the left button. If the line is ',word2,', you should press the right button.'];
+instructStr1 = ['The rest of this experiment is similar to the trials that you completed yesterday. On each trial, you should respond to the line that is contained inside the UNIQUE SHAPE.\n\nIf the line is ', word1,', you should press the left button. If the line is ',word2,', you should press the right button.'];
 
 instructStr2 = ['From now on, you will be able to earn money for correct responses, depending on how fast you respond. For every millisecond that your response time (RT) is faster than ', num2str(zeroPayRT), 'ms, you will earn 1 point.'];
 
@@ -25,16 +25,20 @@ instructStr3 = ['IMPORTANT:  Some of the trials will be BONUS trials! On these t
 
 instructStr4 = 'After each response you will be told how many points you won or lost, and the total points earned so far in this experiment.\n\nAt the end of each session of the experiment, the points that you have earned will be converted into money, and you will be shown how much you have earned so far.\n\nMost participants are able to earn between $20 and $35 across both sessions of the experiment.';
 
+instructStr5 = 'IMPORTANT: Some blocks of the task will be the same as the previous session, where the target MAY or MAY NOT be coloured. However, in other blocks, the target will NEVER be coloured, so you should ignore any coloured shapes in these blocks';
+
+
 if exptSession == 2
-instructStr5 = ['So far, you have earned $', num2str(starting_total, '%0.2f')];
+instructStr6 = ['So far, you have earned $', num2str(starting_total, '%0.2f')];
 end
 
 show_Instructions(1, instructStr1, 8);      % 8
 show_Instructions(2, instructStr2, 12);     % 12
 show_Instructions(3, instructStr3, 12);     % 12
 show_Instructions(4, instructStr4, 6);      % 6
+show_Instructions(5, instructStr5, 6);
 if exptSession == 2
-    DrawFormattedText(MainWindow, instructStr5, 'center', 'center', white);
+    DrawFormattedText(MainWindow, instructStr6, 'center', 'center', white);
     Screen(MainWindow, 'Flip')
     RestrictKeysForKbCheck(KbName('Space'));
     KbWait([], 2);
@@ -64,7 +68,7 @@ Screen('TextSize', instrWin, 34);
 Screen('TextStyle', instrWin, 1);
 
 textColour = white;
-if instrTrial == 3
+if instrTrial == 3 || instrTrial == 5
     textColour = yellow;
 end
 

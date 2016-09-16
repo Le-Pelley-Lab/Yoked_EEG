@@ -237,12 +237,9 @@ if exptSession == 1
     
     RestrictKeysForKbCheck(KbName('t'));   % Only accept T key to continue
     KbWait([], 2);
-    exptInstructionsSession1;
-else
-    exptInstructionsSession2;
 end
 
-
+exptInstructionsSession1;
 
 bonus_points = runTrials(1);
 if runEEG == 1; outp(address, 2); end %end experiment trigger
