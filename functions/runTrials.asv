@@ -169,8 +169,8 @@ if exptPhase == 0
     configArray = zeros(1, pracTrials);
     distractArray(1 : pracTrials) = 5;
     configArray(1:pracTrials) = [ones(1,pracTrials/2)*3 ones(1,pracTrials/2)*4];
-    configArrayOdd = configArray;
-    configArrayEven = configArray;
+    configArrayPre = configArray;
+    configArrayPost = configArray;
 else
     numTrials = exptTrials;
     valueLevels = 4;
@@ -179,15 +179,15 @@ else
     distractArray = zeros(1,exptTrialsPerBlock);
     distractArray = repmat([1:valueLevels],1,exptTrialsPerBlock/valueLevels);
     
-    configArrayOdd = [ones(1,exptTrialsPerBlock/2)*3 ones(1,exptTrialsPerBlock/2)*4];
-    configArrayEven = [ones(1,exptTrialsPerBlock/4) ones(1,exptTrialsPerBlock/4)*2 ones(1,exptTrialsPerBlock/4)*3 ones(1,exptTrialsPerBlock/4)*4];
+    configArrayPre = ones(1,exptTrialsPerBlock)*5; %random configurations for pre-training blocks
+    configArrayPost = [ones(1,exptTrialsPerBlock/4) ones(1,exptTrialsPerBlock/4)*2 ones(1,exptTrialsPerBlock/4)*3 ones(1,exptTrialsPerBlock/4)*4]; %equal proportion of critical configurations for post-training blocks
 end
 
 
 totalPay = 0;
 
-tempTrialOrder(:,:,1) = [distractArray' configArrayOdd']; %odd trial order
-tempTrialOrder(:,:,2) = [distractArray' configArrayEven']; %even trial order
+tempTrialOrder(:,:,1) = [distractArray' configArrayPre']; %odd trial order
+tempTrialOrder(:,:,2) = [distractArray' configArrayPost']; %even trial order
 
 shuffled_trialOrder = shuffleTrialorder(tempTrialOrder(:,:,1), exptPhase);   % Calls a function to shuffle the first block of trials
 shuffled_distractArray = shuffled_trialOrder(:,1);
@@ -549,8 +549,11 @@ for trial = 1 : numTrials
         
         if mod(trial, exptTrialsPerBlock) == 0
             if exptSession == 2
-                if 
-                nextBlockType = rem(block,2) + 1;
+                if  rem(block, preFrequency) ~= 0
+                    nextBlockType = 2;
+                else
+                    nextBlockType = 1;
+                end
             else
                 nextBlockType = 1;
             end

@@ -29,6 +29,9 @@ exptTrialsPerBlock = 48;    % 32. This is used to ensure people encounter the ri
 
 exptTrialsBeforeBreak = exptTrialsPerBlock;     % 2 * exptTrialsPerBlock = 64
 
+if exptSession == 2
+    preFrequency = 4; %4 - every 4th block will be a "pre-training" block
+end
 
 if exptSession == 1
     pracTrials = 8;    % 8
@@ -166,8 +169,8 @@ if exptPhase == 0
     configArray = zeros(1, pracTrials);
     distractArray(1 : pracTrials) = 5;
     configArray(1:pracTrials) = [ones(1,pracTrials/2)*3 ones(1,pracTrials/2)*4];
-    configArrayOdd = configArray;
-    configArrayEven = configArray;
+    configArrayPre = configArray;
+    configArrayPost = configArray;
 else
     numTrials = exptTrials;
     valueLevels = 4;
@@ -176,15 +179,15 @@ else
     distractArray = zeros(1,exptTrialsPerBlock);
     distractArray = repmat([1:valueLevels],1,exptTrialsPerBlock/valueLevels);
     
-    configArrayOdd = [ones(1,exptTrialsPerBlock/2)*3 ones(1,exptTrialsPerBlock/2)*4];
-    configArrayEven = [ones(1,exptTrialsPerBlock/2) ones(1,exptTrialsPerBlock/2)*2];
+    configArrayPre = ones(1,exptTrialsPerBlock)*5; %random configurations for pre-training blocks
+    configArrayPost = [ones(1,exptTrialsPerBlock/4) ones(1,exptTrialsPerBlock/4)*2 ones(1,exptTrialsPerBlock/4)*3 ones(1,exptTrialsPerBlock/4)*4]; %equal proportion of critical configurations for post-training blocks
 end
 
 
 totalPay = 0;
 
-tempTrialOrder(:,:,1) = [distractArray' configArrayOdd']; %odd trial order
-tempTrialOrder(:,:,2) = [distractArray' configArrayEven']; %even trial order
+tempTrialOrder(:,:,1) = [distractArray' configArrayPre']; %odd trial order
+tempTrialOrder(:,:,2) = [distractArray' configArrayPost']; %even trial order
 
 shuffled_trialOrder = shuffleTrialorder(tempTrialOrder(:,:,1), exptPhase);   % Calls a function to shuffle the first block of trials
 shuffled_distractArray = shuffled_trialOrder(:,1);
@@ -213,71 +216,71 @@ for trial = 1 : numTrials
     distractType = shuffled_distractArray(trialCounter);
     targetType = randi(2); %orientation of line within target
     
+    singletonType = randi(2); %randomly determine whether diamond or circle target
+    
     switch shuffled_configArray(trialCounter)
         case 1 %lateral target, midline distractor
             availTargetPos = [leftPos rightPos];
             targetLoc = availTargetPos(randi(length(availTargetPos)));
-            availDistractorPos = midlinePos;
-            singletonType = 1; %diamond target
+            availDistractorPos = midlinePos;            
         case 2 %lateral distractor, midline target
             availTargetPos = [midlinePos];
             targetLoc = availTargetPos(randi(length(availTargetPos)));
             availDistractorPos = [leftPos rightPos];
-            singletonType = 1; %diamond target
-        case 3 % random config, diamond target
-            availTargetPos = [1:6];
+        case 3 % lateral target, ipsilateral distractor
+            availTargetPos = [leftPos rightPos];
             targetLoc = availTargetPos(randi(length(availTargetPos)));
-            if distractType > 2 && distractType < 5 %target = distractor
-                availDistractorPos = targetLoc;
-            elseif distractType == 5 && randi(2) == 1
-                availDistractorPos = targetLoc;
-            else%target /= distractor
-                availDistractorPos = availTargetPos;
-                availDistractorPos(targetLoc) = [];
+            if ismember(targetLoc, rightPos)
+                availDistractorPos = rightPos;
+            else
+                availDistractorPos = leftPos;
             end
-            singletonType = 1; %diamond target
-        case 4 %random config, circle target
-            availTargetPos = [1:6];
+            availDistractorPos(targetLoc) = [];
+        case 4 %lateral target, contralateral distractor
+            availTargetPos = [leftPos rightPos];
+            targetLoc = availTargetPos(randi(length(availTargetPos)));
+            if ismember(targetLoc, rightPos)
+                availDistractorPos = leftPos;
+            else
+                availDistractorPos = rightPos;
+            end
+        case 5 %random configuration
+            availTargetPos = [1:10];
             targetLoc = availTargetPos(randi(length(availTargetPos)));
             if distractType > 2 && distractType < 5 %target = distractor
-                availDistractorPos = targetLoc;
-            elseif distractType == 5 && randi(2) == 1
                 availDistractorPos = targetLoc;
             else %target /= distractor
                 availDistractorPos = availTargetPos;
                 availDistractorPos(targetLoc) = [];
-            end
-            singletonType = 2; %circle target
+            end            
     end
     
-    switch targetLoc
-        case {2, 3}
-            targetHem = 1; %target on left
-        case {5, 6}
-            targetHem = 2; %target on right
-        case {1, 4}
-            targetHem = 3; %target on midline
+    if ismember(targetLoc, leftPos)
+        targetHem = 1; %target left
+    elseif ismember(targetLoc, rightPos)
+        targetHem = 2; %target right
+    else
+        targetHem = 3; %target mid
     end
     
     distractLoc = availDistractorPos(randi(length(availDistractorPos)));
     
-    switch distractLoc
-        case {2, 3}
-            distractHem = 1; %distractor left
-        case {5, 6}
-            distractHem = 2; %distractor right
-        case {1, 4}
-            distractHem = 3; %distractor on midline
+    if ismember(distractLoc, leftPos)
+        distractHem = 1; %distractor left
+    elseif ismember(distractLoc, rightPos)
+        distractHem = 2; %distractor right
+    else
+        distractHem = 3; %distractor mid
     end
     
-    if shuffled_configArray(trialCounter) && distractType > 2 && distractType < 5
+    if shuffled_configArray(trialCounter) == 5 && distractType > 2 && distractType < 5
         distractHem = 4; %"No" separate distractor
     end
     
     fix_pause = round((minFixation + rand*(maxFixation - minFixation))/.01)*.01;    % Creates random fixation interval in range minFixation to maxFixation, rounded to 10ms (updated for better alpha desynch)
     
     Screen('FillRect', stimWindow, black);  % Clear the screen from the previous trial by drawing a black rectangle over the whole thing
-    Screen('DrawTexture', stimWindow, fixationTex, [], fixRect); %draw fixation cross
+    Screen('DrawTexture', stimWindow, fixationTex, [], fixRect); %draw fixation dot
     
     for i = 1 : stimLocs
         if singletonType == 1 %draw grey circles
@@ -286,9 +289,7 @@ for trial = 1 : numTrials
             Screen('DrawTexture', stimWindow, DiamondTex(1), [], stimRect(i,:,2));
         end
     end
-    
-    
-    
+   
     if distractLoc ~= targetLoc %if distractor /= target
         if singletonType == 1
             Screen('DrawTexture', stimWindow, CircleTex(distractType+1), [], stimRect(distractLoc,:,2));      % Draw distractor circle
@@ -296,7 +297,6 @@ for trial = 1 : numTrials
             Screen('DrawTexture', stimWindow, DiamondTex(distractType+1), [], stimRect(distractLoc,:,2)); %draw distractor diamond
         end
     end
-    
     
     for i = 1 : stimLocs
         lineOrientation(i) = round(rand);
@@ -313,8 +313,7 @@ for trial = 1 : numTrials
             Screen('DrawTexture', stimWindow, DiamondTex(1), [], stimRect(targetLoc,:,2)); %draw diamond target
         else
             Screen('FillRect', stimWindow, black, stimRect(targetLoc,:,2));
-            Screen('DrawTexture', stimWindow, CircleTex(1), [], stimRect(targetLoc,:,2));
-            %Screen('FrameOval', stimWindow, gray, stimRect(targetLoc,:,1), stim_pen, stim_pen);      % Draw distractor circle
+            Screen('DrawTexture', stimWindow, CircleTex(1), [], stimRect(targetLoc,:,2)); %draw circle target
         end
     else
         if singletonType == 1
@@ -322,8 +321,7 @@ for trial = 1 : numTrials
             Screen('DrawTexture', stimWindow, DiamondTex(distractType+1), [], stimRect(targetLoc,:,2)); %draw diamond coloured target
         else
             Screen('FillRect', stimWindow, black, stimRect(targetLoc,:,2));
-            Screen('DrawTexture', stimWindow, CircleTex(distractType+1), [], stimRect(targetLoc, :, 2));
-            %Screen('FrameOval', stimWindow, distract_col(distractType,:), stimRect(targetLoc,:,1), stim_pen, stim_pen);      % Draw coloured target circle
+            Screen('DrawTexture', stimWindow, CircleTex(distractType+1), [], stimRect(targetLoc, :, 2)); %draw circle coloured target
         end
     end
     
@@ -348,7 +346,7 @@ for trial = 1 : numTrials
     % 6 = Right Side Target, Left Side Distractor
     % 7 = Right Side Target, Right Side Distractor
     % 8 = Right Side Distractor, Midline Target
-    % 9 = Midline Target, Midline/no target
+    % 9 = Midline Target, Midline/no distractor
     %%% Ones Place %%%
     % 1 = Low distractor
     % 2 = High distractor
@@ -376,54 +374,36 @@ for trial = 1 : numTrials
         if exptPhase == 0
             triggerOn = triggerOn + 200; %trigger is 200 for all practice trials
         elseif exptPhase == 1
-            if rem(b,2) == 0 %if even block
+            if rem(block,preFrequency) ~= 1 %if post-training (EEG) block
                 triggerOn = triggerOn + 100;
             end
-            %continue from here
             switch distractType
                 case 1
-                    triggerOn = triggerOn + 1;
+                    triggerOn = triggerOn + 1; % low distractor
                 case 2
-                    triggerOn = triggerOn + 2;
+                    triggerOn = triggerOn + 2; %high distractor
                 case 3
-                    triggerOn = triggerOn + 3;
+                    triggerOn = triggerOn + 3; %low target
                 case 4
-                    triggerOn = triggerOn + 4;
+                    triggerOn = triggerOn + 4; %low distractor
             end
             switch targetHem
                 case 1
-                    switch distractHem
-                        case 1
-                            triggerOn = triggerOn + 20;
-                        case 2
-                            triggerOn = triggerOn + 30;
-                        case 3
-                            triggerOn = triggerOn + 10;
-                        case 4
-                            triggerOn = triggerOn + 10;
-                    end
+                    triggerOn = triggerOn + 10; %left target
                 case 2
-                    switch distractHem
-                        case 1
-                            triggerOn = triggerOn + 60;
-                        case 2
-                            triggerOn = triggerOn + 70;
-                        case 3
-                            triggerOn = triggerOn + 50;
-                        case 4
-                            triggerOn = triggerOn + 50;
-                    end
+                    triggerOn = triggerOn + 50; %right target
                 case 3
-                    switch distractHem
-                        case 1
-                            triggerOn = triggerOn + 40;
-                        case 2
-                            triggerOn = triggerOn + 80;
-                        case 3
-                            triggerOn = triggerOn + 90;
-                        case 4
-                            triggerOn = triggerOn + 90;
-                    end
+                    triggerOn = triggerOn + 30; %midline target
+            end
+            switch distractHem
+                case 1
+                    triggerOn = triggerOn + 10; %left distractor
+                case 2
+                    triggerOn = triggerOn + 20; %right distractor
+                case 3
+                    triggerOn = triggerOn + 60; %midline distractor
+                case 4
+                    triggerOn = triggerOn + 60; %no distractor (only relevant to pre-training blocks where target is coloured)
             end
         end
     end
@@ -466,8 +446,6 @@ for trial = 1 : numTrials
     %     elseif distractHem == 1
     %         imwrite(image, 'distractImage.png');
     %     end
-    
-    
     
     [keyCode, et, timeout] = accKbWait(st, timeoutDuration);
     
@@ -540,18 +518,13 @@ for trial = 1 : numTrials
             end
             
             Screen('TextSize', MainWindow, 26);
-            DrawFormattedText(MainWindow, format_payStr(totalPay + starting_total_points), 'center', 740, white);
-            
+            DrawFormattedText(MainWindow, format_payStr(totalPay + starting_total_points), 'center', 740, white);   
         end
     end
-    
-    
     
     Screen('TextSize', MainWindow, 40);
     DrawFormattedText(MainWindow, fbStr, 'center', scr_centre(2) + 75, yellow);
     Screen('DrawTexture', MainWindow, fixationTex, [], fixRect);
-    
-    zz = 0;
     
     WaitSecs(onscreenAfterResponse-(GetSecs-et));
     % wait until 100ms after response is registered before presenting
@@ -570,13 +543,17 @@ for trial = 1 : numTrials
     
     
     if exptPhase == 0
-        DATA.practrialInfo(trial,:) = [exptSession, trial, targetLoc, targetType, distractLoc, distractType, shuffled_configArray(trialCounter), timeout, correct, rt, fix_pause];
+        DATA.practrialInfo(trial,:) = [exptSession, trial, targetLoc, targetType, distractLoc, distractType, singletonType, shuffled_configArray(trialCounter), timeout, correct, rt, fix_pause];
     else
-        DATA.expttrialInfo(trial,:) = [exptSession, block, trial, trialCounter, trials_since_break, targetLoc, targetType, distractLoc, distractType, shuffled_configArray(trialCounter), timeout, correct, rt, roundRT, trialPay, totalPay, fix_pause];
+        DATA.expttrialInfo(trial,:) = [exptSession, block, trial, trialCounter, trials_since_break, targetLoc, targetType, distractLoc, distractType, singletonType, shuffled_configArray(trialCounter), timeout, correct, rt, roundRT, trialPay, totalPay, fix_pause];
         
         if mod(trial, exptTrialsPerBlock) == 0
             if exptSession == 2
-                nextBlockType = rem(block,2) + 1;
+                if  rem(block, preFrequency) ~= 0
+                    nextBlockType = 2;
+                else
+                    nextBlockType = 1;
+                end
             else
                 nextBlockType = 1;
             end
@@ -658,21 +635,25 @@ end
         
     
 
-DrawFormattedText(MainWindow, ['Time for a break\n\nSit back, relax for a moment! You will be able to carry on in ', num2str(breakDur),' seconds\n\n\nRemember that the faster you make correct responses, the more you will earn in this task!'], 'center', 'center', white, 50, [], [], 1.5);
+DrawFormattedText(MainWindow, breakText, 'center', 'center', white, 50, [], [], 1.5);
 
 Screen(MainWindow, 'Flip'); if runEEG == 1; outp(address,254); end %send break trigger
-WaitSecs(breakDur);
 
-RestrictKeysForKbCheck(KbName('Space'));   % Only accept spacebar
+if exptSession == 1
+    WaitSecs(breakDur);
+    RestrictKeysForKbCheck(KbName('Space'));   % Only accept spacebar
+    DrawFormattedText(MainWindow, 'Please place your right index and middle fingers on the 4 and 5 keys\n\nand press the spacebar when you are ready to continue', 'center', 'center' , white);
+else
+    RestrictKeysForKbCheck(KbName('t')); %Only accept "T", for experimenter to continue
+end
 
-DrawFormattedText(MainWindow, 'Please place your index fingers on the C and M keys\n\nand press the spacebar when you are ready to continue', 'center', 'center' , white);
 Screen(MainWindow, 'Flip');
 
 KbWait([], 2);
 if runEEG == 1; outp(address,255); end %send continue after break trigger
 Screen(MainWindow, 'Flip');
 
-RestrictKeysForKbCheck([KbName('c'), KbName('m')]);   % Only accept keypresses from keys C and M
+RestrictKeysForKbCheck([KbName('4'), KbName('5')]);   % Only accept keypresses from keys C and M
 
 WaitSecs(pauseDur);
 
