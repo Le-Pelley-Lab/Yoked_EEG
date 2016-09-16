@@ -196,7 +196,7 @@ rightPos = [5 6];
 leftPos = [2 3];
 midlinePos = [1 4];
 
-RestrictKeysForKbCheck([KbName('c'), KbName('m')]);   % Only accept keypresses from keys C and M
+RestrictKeysForKbCheck([KbName('4'), KbName('m')]);   % Only accept keypresses from keys C and M
 
 WaitSecs(initialPause);
 
@@ -549,9 +549,11 @@ for trial = 1 : numTrials
     DrawFormattedText(MainWindow, fbStr, 'center', scr_centre(2) + 75, yellow);
     Screen('DrawTexture', MainWindow, fixationTex, [], fixRect);
     
+    zz = 0;
     while GetSecs-et < onscreenAfterResponse
         % wait until 100ms after response is registered before presenting
         % feedback. Check using EEG triggers.
+        zz = zz + 1;
     end
     
     Screen('Flip', MainWindow); if runEEG == 1; outp(address, triggerFB); end

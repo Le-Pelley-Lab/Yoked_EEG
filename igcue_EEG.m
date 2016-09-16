@@ -1,5 +1,5 @@
 
-%clear all
+clear all
 
 %Screen('Preference', 'SkipSyncTests', 2 );      % Skips the Psychtoolbox calibrations - REMOVE THIS WHEN RUNNING FOR REAL!
 Screen('CloseAll');

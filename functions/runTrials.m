@@ -196,7 +196,7 @@ rightPos = [5 6];
 leftPos = [2 3];
 midlinePos = [1 4];
 
-RestrictKeysForKbCheck([KbName('c'), KbName('m')]);   % Only accept keypresses from keys C and M
+RestrictKeysForKbCheck([KbName('4'), KbName('5')]);   % Only accept keypresses from numpad keys 4 and 5
 
 WaitSecs(initialPause);
 
@@ -470,9 +470,9 @@ for trial = 1 : numTrials
     [keyCode, et, timeout] = accKbWait(st, timeoutDuration);
     
     keyCodePressed = find(keyCode, 1, 'first');
-    if keyCodePressed == 67
+    if keyCodePressed == 100
         if runEEG == 1; outp(address, 5); end %left response trigger
-    elseif keyCodePressed == 77
+    elseif keyCodePressed == 101
         if runEEG == 1; outp(address, 6); end %right response trigger
     else
         if runEEG == 1; outp(address, 7); end %no response trigger
@@ -493,13 +493,13 @@ for trial = 1 : numTrials
         
         fbStr = 'ERROR';
         
-        if keyPressed == 'c'
+        if keyPressed == '4'
             if keyCounterbal == targetType     % If C = horizontal and line is horizontal, or if C = vertical and line is vertical
                 correct = 1;
                 fbStr = 'correct';
             end
             
-        elseif keyPressed == 'm'
+        elseif keyPressed == '5'
             if keyCounterbal ~= targetType     % If M = horizontal and line is horizontal, or if M = vertical and line is vertical
                 correct = 1;
                 fbStr = 'correct';
@@ -549,9 +549,11 @@ for trial = 1 : numTrials
     DrawFormattedText(MainWindow, fbStr, 'center', scr_centre(2) + 75, yellow);
     Screen('DrawTexture', MainWindow, fixationTex, [], fixRect);
     
+    zz = 0;
     while GetSecs-et < onscreenAfterResponse
         % wait until 100ms after response is registered before presenting
-        % feedback
+        % feedback. Check using EEG triggers.
+        zz = zz + 1;
     end
     
     Screen('Flip', MainWindow); if runEEG == 1; outp(address, triggerFB); end
