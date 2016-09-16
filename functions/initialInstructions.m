@@ -19,7 +19,7 @@ instructStr2 = ['Each of these shapes contains a line. Your task is to respond t
 instructStr3 = ['If the line inside the target is ', word1,', you should press the "4" button on the number pad with your right index finger. If the line is ',word2,', you should press the "5" button on the number pad with your right middle finger.'];
 
 if exptSession == 2
-    instructStr4 = 'You should respond as fast as you can, but you should try to avoid making errors.\n\nPlease keep your eyes fixated on the dot in the centre of the screen throughout the task. This allows us to get better EEG recordings, and is also quickest way to locate the target.';
+    instructStr4 = 'You should respond as fast as you can, but you should try to avoid making errors.\n\nPlease keep your eyes fixated on the dot in the centre of the screen throughout the task. This allows us to get better EEG recordings, and is also quickest way to locate the target. The experimenter will give you feedback on how many eye movements you are making. If you continue to make too many eye movements, the experimenter will cancel the rest of the experiment and you will not be able to earn more points.';
 else
     instructStr4 = 'You should respond as fast as you can, but you should try to avoid making errors.\n\nPlease keep your eyes fixated on the dot in the centre of the screen throughout the task. This will allow us to get better EEG recordings in the second session, so it is important to practice now. It is also quickest way to locate the target.';
 end

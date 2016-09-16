@@ -17,7 +17,7 @@ else
     word2 = 'HORIZONTAL';
 end
 
-instructStr1 = ['The rest of this experiment is similar to the trials that you completed yesterday. On each trial, you should respond to the line that is contained inside the UNIQUE SHAPE.\n\nIf the line is ', word1,', you should press the left button. If the line is ',word2,', you should press the right button.'];
+instructStr1 = ['The rest of this experiment is similar to the task that you completed yesterday. On each trial, you should respond to the line that is contained inside the UNIQUE SHAPE.\n\nIf the line is ', word1,', you should press the left button. If the line is ',word2,', you should press the right button.'];
 
 instructStr2 = ['From now on, you will be able to earn money for correct responses, depending on how fast you respond. For every millisecond that your response time (RT) is faster than ', num2str(zeroPayRT), 'ms, you will earn 1 point.'];
 
