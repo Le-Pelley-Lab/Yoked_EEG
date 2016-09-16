@@ -25,7 +25,7 @@ instructStr3 = ['IMPORTANT:  Some of the trials will be BONUS trials! On these t
 
 instructStr4 = 'After each response you will be told how many points you won or lost, and the total points earned so far in this experiment.\n\nAt the end of each session of the experiment, the points that you have earned will be converted into money, and you will be shown how much you have earned so far.\n\nMost participants are able to earn between $20 and $35 across both sessions of the experiment.';
 
-instructStr5 = 'IMPORTANT: Some blocks of the task will be the same as the previous session, where some In some blocks of the task, the target will NEVER BE COLOURED so you should ignore the coloured shapes in the display';
+instructStr5 = 'IMPORTANT: Some blocks of the task will be the same as the previous session, where the target MAY or MAY NOT be coloured. However, in other blocks, the target will NEVER be coloured, so you should ignore any coloured shapes in these blocks';
 
 
 if exptSession == 2
@@ -36,6 +36,7 @@ show_Instructions(1, instructStr1, 8);      % 8
 show_Instructions(2, instructStr2, 12);     % 12
 show_Instructions(3, instructStr3, 12);     % 12
 show_Instructions(4, instructStr4, 6);      % 6
+show_Instructions(5, instructStr5, 6);
 if exptSession == 2
     DrawFormattedText(MainWindow, instructStr6, 'center', 'center', white);
     Screen(MainWindow, 'Flip')
@@ -67,7 +68,7 @@ Screen('TextSize', instrWin, 34);
 Screen('TextStyle', instrWin, 1);
 
 textColour = white;
-if instrTrial == 3
+if instrTrial == 3 || instrTrial == 5
     textColour = yellow;
 end
 
@@ -87,8 +88,11 @@ if instrTrial == 2
 end
 
 
-if instrTrial == 3
-    extraStr = ['So you will earn much more for correct responses on \n"', num2str(bigMultiplier), ' x bonus" trials than on standard trials. However, you will not be told whether a trial was a "', num2str(bigMultiplier), ' x bonus" trial until after you have made your response.'];
+if instrTrial == 3 || instrTrial == 5
+    if instrTrial == 3
+        extraStr = ['So you will earn much more for correct responses on \n"', num2str(bigMultiplier), ' x bonus" trials than on standard trials. However, you will not be told whether a trial was a "', num2str(bigMultiplier), ' x bonus" trial until after you have made your response.'];
+    else
+       extraStr = ['So you will earn much more for correct responses on \n"', num2str(bigMultiplier), ' x bonus" trials than on standard trials. However, you will not be told whether a trial was a "', num2str(bigMultiplier), ' x bonus" trial until after you have made your response.']; 
     DrawFormattedText(MainWindow, extraStr, scr_centre(1) - instrBox_width / 2, textTop + instrBox_height + 100, white, 60, [], [], 1.5);
 end
 

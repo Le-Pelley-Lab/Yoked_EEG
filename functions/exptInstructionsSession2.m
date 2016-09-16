@@ -88,8 +88,12 @@ if instrTrial == 2
 end
 
 
-if instrTrial == 3
-    extraStr = ['So you will earn much more for correct responses on \n"', num2str(bigMultiplier), ' x bonus" trials than on standard trials. However, you will not be told whether a trial was a "', num2str(bigMultiplier), ' x bonus" trial until after you have made your response.'];
+if instrTrial == 3 || instrTrial == 5
+    if instrTrial == 3
+        extraStr = ['So you will earn much more for correct responses on \n"', num2str(bigMultiplier), ' x bonus" trials than on standard trials. However, you will not be told whether a trial was a "', num2str(bigMultiplier), ' x bonus" trial until after you have made your response.'];
+    else
+        extraStr = ['There will be instructions on the screen and from the experimenter between blocks to let you know which type of block will be next.']; 
+    end
     DrawFormattedText(MainWindow, extraStr, scr_centre(1) - instrBox_width / 2, textTop + instrBox_height + 100, white, 60, [], [], 1.5);
 end
 
