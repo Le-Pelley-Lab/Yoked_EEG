@@ -1,0 +1,5 @@
+# Git ignores these trial types
+.mat
+.asv
+.csv
+.xlsx
