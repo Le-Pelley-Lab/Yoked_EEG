@@ -9,6 +9,7 @@ Beeper;
 clc;
 
 addpath('functions');
+addpath('Stimuli');
 
 global MainWindow scr_centre DATA datafilename
 global keyCounterbal starting_total starting_total_points exptSession
