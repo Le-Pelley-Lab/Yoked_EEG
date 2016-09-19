@@ -176,17 +176,15 @@ else
     if exptSession == 2
         switch condition
             case 1
-                valueLevels = [1 2];
+                valueLevels = [1 2
             case 2
-                valueLevels = [3 4];
         end
-    else
-        valueLevels = [1:4];
     end
+    valueLevels = 4;
     DATA.expttrialInfo = zeros(exptTrials, 17);
     
     distractArray = zeros(1,exptTrialsPerBlock);
-    distractArray = repmat(valueLevels,1,exptTrialsPerBlock/length(valueLevels));
+    distractArray = repmat([1:valueLevels],1,exptTrialsPerBlock/valueLevels);
     
     configArrayPre = ones(1,exptTrialsPerBlock)*5; %random configurations for pre-training blocks
     configArrayPost = [ones(1,exptTrialsPerBlock/4) ones(1,exptTrialsPerBlock/4)*2 ones(1,exptTrialsPerBlock/4)*3 ones(1,exptTrialsPerBlock/4)*4]; %equal proportion of critical configurations for post-training blocks

@@ -16,7 +16,7 @@ global keyCounterbal starting_total starting_total_points exptSession
 global distract_col colourName
 global white black gray yellow
 global bigMultiplier smallMultiplier
-global zeroPayRT oneMSvalue
+global zeroPayRT condition
 global address nf runEEG
 
 nf = java.text.DecimalFormat;
@@ -72,6 +72,10 @@ end
 
 
 if exptSession == 1
+    condition = 0;
+    while condition < 1 || condition > 2
+        condition = input('Condition (1-2)--->');
+    end
     colBalance = 0;
     while colBalance < 1 || colBalance > 4
         colBalance = input('Counterbalance (1-4)---> ');
@@ -100,6 +104,7 @@ else
     
     load([datafilename, num2str(exptSession - 1), '.mat'])
     colBalance = DATA.counterbal;
+    condition = DATA.condition;
     p_age = DATA.age;
     p_sex = DATA.sex;
     p_genderInfo = DATA.genderInfo;
@@ -132,6 +137,7 @@ end
 DATA.subject = p_number;
 DATA.session = exptSession;
 DATA.counterbal = colBalance;
+DATA.condition = condition;
 DATA.age = p_age;
 DATA.sex = p_sex;
 DATA.genderInfo = p_genderInfo;
