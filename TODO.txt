@@ -18,8 +18,10 @@ Reward experiment:
 
 Pre-training as it is now, participants search for high and low target, suppress high and low distractor. Or alternately, rewarded target, rewarded distractor, no distractor (receive no reward)
 
-Post-training, tell participants that they will not be told how many points they will be earning until the end of the experiment. Only present high-target and high-distractor = ~160 per distractor type/configuration combo.
+Post-training, tell participants that they will not be told how many points they will be earning until the end of the experiment. Only present high-target and high-distractor = ~160 per distractor type/configuration combo. 
+
+Include some "refresher" blocks to keep people reminded of the colour-reward contingencies.
 
 Control experiment:
 
-Same as reward experiment but no rewards given. 
+Same as reward experiment but test low target vs low reward in the EEG phase.
