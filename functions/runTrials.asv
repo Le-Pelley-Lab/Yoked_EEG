@@ -577,7 +577,7 @@ for trial = 1 : numTrials
         
         if (mod(trial, exptTrialsBeforeBreak) == 0 && trial ~= numTrials);
             save(datafilename, 'DATA');
-            take_a_break(rem(block,2), breakDuration, initialPause, totalPay, block, maxBlocks);
+            take_a_break(rem(block,2), breakDuration, initialPause, totalPay, maxBlock);
             trials_since_break = 0;
         end
         
@@ -630,12 +630,12 @@ end
 
 
 
-function take_a_break(nextBlockType, breakDur, pauseDur, currentTotal, nextBlockNum, maxBlockNum)
+function take_a_break(nextBlock, breakDur, pauseDur, currentTotal)
 
-global MainWindow white address runEEG exptSession starting_total_points gray
+global MainWindow white address runEEG exptSession starting_total_points
 
 if exptSession == 2
-    if nextBlockType == 0 %next block is odd (pre-training block)
+    if nextBlock == 0 %next block is odd (pre-training block)
         breakText = ['Time for a break\n\nSit back, relax for a moment! The experimenter will restart the task in a few moments\n\n\nIn the next block, the target MAY or MAY NOT be coloured.'...
             '\n\n\nYou WILL be told how many points you won or lost after each trial.\n\n\nRemember that the faster you make correct responses, the more you will earn in this task!'...
             '\n\n\nSo far you have earned ' char(nf.format(currentTotal + starting_total_points)) ' points all together.'];
@@ -650,10 +650,8 @@ else
 end
         
     
-blocksLeftText = num2str(maxBlockNum-(nextBlockNum-1));
 
 DrawFormattedText(MainWindow, breakText, 'center', 'center', white, 50, [], [], 1.5);
-DrawFormattedText(MainWindow, blocksLeftText, 'right', [] , gray, 50, [], [], 1.5);
 
 Screen(MainWindow, 'Flip'); if runEEG == 1; outp(address,254); end %send break trigger
 
