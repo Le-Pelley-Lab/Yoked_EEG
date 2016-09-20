@@ -575,7 +575,7 @@ for trial = 1 : numTrials
         
         if (mod(trial, exptTrialsBeforeBreak) == 0 && trial ~= numTrials);
             save(datafilename, 'DATA');
-            take_a_break(rem(block,2), breakDuration, initialPause);
+            take_a_break(rem(block,2), breakDuration, initialPause, totalPay);
             trials_since_break = 0;
         end
         
@@ -628,18 +628,23 @@ end
 
 
 
-function take_a_break(nextBlock, breakDur, pauseDur)
+function take_a_break(nextBlock, breakDur, pauseDur, currentTotal)
 
-global MainWindow white address runEEG exptSession
+global MainWindow white address runEEG exptSession starting_total_points
 
 if exptSession == 2
     if nextBlock == 0 %next block is odd (pre-training block)
-        breakText = ['Time for a break\n\nSit back, relax for a moment! The experimenter will restart the task in a few moments\n\n\nIn the next block, the target MAY or MAY NOT be coloured.\n\n\nRemember that the faster you make correct responses, the more you will earn in this task!'];
+        breakText = ['Time for a break\n\nSit back, relax for a moment! The experimenter will restart the task in a few moments\n\n\nIn the next block, the target MAY or MAY NOT be coloured.'...
+            '\n\n\nYou WILL be told how many points you won or lost after each trial.\n\n\nRemember that the faster you make correct responses, the more you will earn in this task!'...
+            '\n\n\nSo far you have earned ' char(nf.format(currentTotal + starting_total_points)) ' points all together.'];
     else %next block is even (post-training block)
-        breakText = ['Time for a break\n\nSit back, relax for a moment! The experimenter will restart the task in a few moments\n\n\nIn the next block, the target WILL NEVER be coloured.\n\n\nRemember that the faster you make correct responses, the more you will earn in this task!'];
+        breakText = ['Time for a break\n\nSit back, relax for a moment! The experimenter will restart the task in a few moments\n\n\nIn the next block, the target WILL NEVER be coloured.'...
+            '\n\n\nYou WILL NOT be told how many points you won or lost after each trial. But you will still be earning points!\n\n\nRemember that the faster you make correct responses, the more you will earn in this task!'...
+            '\n\n\nSo far you have earned ' char(nf.format(currentTotal + starting_total_points)) ' points all together.'];
     end
 else
-     breakText = ['Time for a break\n\nSit back, relax for a moment! You will be able to carry on in ', num2str(breakDur),' seconds\n\n\nRemember that the faster you make correct responses, the more you will earn in this task!'];
+     breakText = ['Time for a break\n\nSit back, relax for a moment! You will be able to carry on in ', num2str(breakDur),' seconds\n\n\nRemember that the faster you make correct responses, the more you will earn in this task!'...
+         '\n\n\nSo far you have earned ' char(nf.format(currentTotal + starting_total_points)) ' points all together.'];
 end
         
     
@@ -662,7 +667,7 @@ KbWait([], 2);
 if runEEG == 1; outp(address,255); end %send continue after break trigger
 Screen(MainWindow, 'Flip');
 
-RestrictKeysForKbCheck([KbName('4'), KbName('5')]);   % Only accept keypresses from keys C and M
+RestrictKeysForKbCheck([KbName('4'), KbName('5')]);   % Only accept keypresses from keys 4 and 5
 
 WaitSecs(pauseDur);
 
