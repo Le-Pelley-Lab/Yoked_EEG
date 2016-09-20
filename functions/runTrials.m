@@ -176,9 +176,9 @@ else
     if exptSession == 2
         switch condition
             case 1
-                valueLevels = [1 2];
+                valueLevels = [1 3];
             case 2
-                valueLevels = [3 4];
+                valueLevels = [2 4];
         end
     else
         valueLevels = [1:4];
@@ -388,13 +388,13 @@ for trial = 1 : numTrials
             end
             switch distractType
                 case 1
-                    triggerOn = triggerOn + 1; % low distractor
+                    triggerOn = triggerOn + 2; % low distractor
                 case 2
-                    triggerOn = triggerOn + 2; %high distractor
+                    triggerOn = triggerOn + 1; %high distractor
                 case 3
-                    triggerOn = triggerOn + 3; %low target
+                    triggerOn = triggerOn + 4; %low target
                 case 4
-                    triggerOn = triggerOn + 4; %low distractor
+                    triggerOn = triggerOn + 3; %high target
             end
             switch targetHem
                 case 1
