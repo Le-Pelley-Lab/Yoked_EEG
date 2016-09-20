@@ -6,7 +6,7 @@ global keyCounterbal starting_total_points
 global distract_col
 global white black gray yellow
 global bigMultiplier smallMultiplier
-global zeroPayRT
+global zeroPayRT testing
 global stim_size stim_pen
 global address exptSession nf
 global runEEG condition
@@ -25,23 +25,35 @@ maxFixation = 1.2;         % 1.2   Maximum fixation duration
 initialPause = 3;   % 3 ***
 breakDuration = 15;  % 15 ***
 
-exptTrialsPerBlock = 48;    % 32. This is used to ensure people encounter the right number of each of the different types of distractors.
+exptTrialsPerBlock = 48;    % 48. This is used to ensure people encounter the right number of each of the different types of distractors.
 
 exptTrialsBeforeBreak = exptTrialsPerBlock;     % 2 * exptTrialsPerBlock = 64
 
 if exptSession == 2
-    preFrequency = 4; %4 - every 4th block will be a "pre-training" block
+    preFrequency = 4; %4 - every 4th block will be a "pre-training" block. Block 1,5,9 etc.
 end
 
-if exptSession == 1
-    pracTrials = 8;    % 8
-    maxBlocks = 8;
-    exptTrials = maxBlocks * exptTrialsBeforeBreak; % 8 * exptTrialsBeforeBreak = 512;
+if testing == 1
+    if exptSession == 1
+        pracTrials = 2;
+        maxBlocks = 2;
+    else
+        pracTrials = 2;
+        maxBlocks = 5;
+    end
 else
-    pracTrials = 32; %increased number of practice trials for eye movements
-    maxBlocks = 26;
-    exptTrials = maxBlocks * exptTrialsBeforeBreak;    % 16 * exptTrialsBeforeBreak = 1248
+    if exptSession == 1
+        pracTrials = 8;
+        maxBlocks = 12;
+    else
+        pracTrials = 32; %increased number of practice trials for eye movements
+        maxBlocks = 26;
+    end
 end
+
+exptTrials = maxBlocks * exptTrialsBeforeBreak; 
+% Session 1: 12 * exptTrialsBeforeBreak = 576;
+% Session 2: 26 * exptTrialsBeforeBreak = 1248;
 
 stimLocs = 10;       % Number of stimulus locations
 stim_size = 165;     % 165 Size of diamond stimulus. = Visual angle of 4.39 dva at 57cm from screen. Slightly larger than diameter of circles, but should be equal area of grey outline
@@ -55,7 +67,7 @@ fix_size = 20;      % This is the side length of the fixation cross. Approx 1 dv
 
 bonusWindowWidth = 400;
 bonusWindowHeight = 100;
-bonusWindowTop = 230;
+bonusWindowTop = scr_centre(2)-50-bonusWindowHeight;
 
 roundRT = 0;
 
@@ -87,7 +99,6 @@ Screen('FillPoly', DiamondTex(1), gray, d_pts);
 Screen('FillPoly', DiamondTex(1), black, small_d_pts);
 CircleTex(1) = Screen('OpenOffscreenWindow', MainWindow, black, [0 0 stim_size stim_size]);
 Screen('FrameOval', CircleTex(1), gray, [stim_size/2-circ_stim_size/2 stim_size/2-circ_stim_size/2 stim_size/2+circ_stim_size/2 stim_size/2+circ_stim_size/2], stim_pen, stim_pen);      % Draw coloured target circle
-BlankTex = Screen('OpenOffscreenWindow', MainWindow, black, [0 0 stim_size stim_size]);
 
 for dd = 1:length(distract_col) %make diamonds in each distractor colour
     DiamondTex(dd+1) = Screen('OpenOffscreenWindow', MainWindow, black, [0 0 stim_size stim_size]);
@@ -109,16 +120,16 @@ fixRect = [scr_centre(1) - fix_size/2    scr_centre(2) - fix_size/2   scr_centre
 % horizontal displacements of these lines (which are equal because lines
 % are at 45 deg).
 
-obliqueDisp = round(sqrt(lineLength * lineLength / 2));
+%obliqueDisp = round(sqrt(lineLength * lineLength / 2));
 
 % Create a matrix containing the six stimulus locations, equally spaced
 % around an imaginary circle of diameter circ_diam
 % Also create sets of points defining the positions of the oblique and
 % target (horizontal / vertical) lines that appear inside each stimulus
-targetRect = zeros(stimLocs,4);
-circleRect = zeros(stimLocs, 4);
-lineRight = zeros(stimLocs,4);
-lineLeft = zeros(stimLocs,4);
+stimCentre = zeros(stimLocs,4);
+stimRect = zeros(stimLocs, 4);
+%lineRight = zeros(stimLocs,4);
+%lineLeft = zeros(stimLocs,4);
 lineVert = zeros(stimLocs,4);
 lineHorz = zeros(stimLocs,4);
 lineOrientation = zeros(1,stimLocs);   % Used below; preallocating for speed
@@ -131,8 +142,8 @@ for i = 0 : stimLocs - 1    % Define rects for stimuli and line segments
     stimCentre(i+1,:) = [scr_centre(1) - circ_diam * sin(i*2*pi/stimLocs)   scr_centre(2) - circ_diam * cos(i*2*pi/stimLocs)  scr_centre(1) - circ_diam * sin(i*2*pi/stimLocs)  scr_centre(2) - circ_diam * cos(i*2*pi/stimLocs)];
     lineVert(i+1,:) = [stimCentre(i+1,1) stimCentre(i+1,2) - lineLength/2 stimCentre(i+1,1) stimCentre(i+1,2)+lineLength/2];
     lineHorz(i+1,:) = [stimCentre(i+1,1) - lineLength/2 stimCentre(i+1,2) stimCentre(i+1,1)+lineLength/2 stimCentre(i+1,2)];
-    lineRight(i+1,:) = [stimCentre(i+1,1) - obliqueDisp/2   stimCentre(i+1,2) + obliqueDisp/2   stimCentre(i+1,1) + obliqueDisp/2   stimCentre(i+1,2) - obliqueDisp/2];
-    lineLeft(i+1,:) = [stimCentre(i+1,1) - obliqueDisp/2   stimCentre(i+1,2) - obliqueDisp/2   stimCentre(i+1,1) + obliqueDisp/2   stimCentre(i+1,2)  + obliqueDisp/2];
+    %lineRight(i+1,:) = [stimCentre(i+1,1) - obliqueDisp/2   stimCentre(i+1,2) + obliqueDisp/2   stimCentre(i+1,1) + obliqueDisp/2   stimCentre(i+1,2) - obliqueDisp/2];
+    %lineLeft(i+1,:) = [stimCentre(i+1,1) - obliqueDisp/2   stimCentre(i+1,2) - obliqueDisp/2   stimCentre(i+1,1) + obliqueDisp/2   stimCentre(i+1,2)  + obliqueDisp/2];
     
     stimRect(i+1,:,1) = stimCentre(i+1,:)+circRectVals; %stimRect(:,:,1) has all the rects for the circle stimuli
     stimRect(i+1,:,2) = stimCentre(i+1,:)+diamondRectVals; %stimRect(:,:,2) has all the rects for the diamond stimuli
@@ -154,23 +165,30 @@ stimWindow = Screen('OpenOffscreenWindow', MainWindow, black);
 % Create a small offscreen window and draw the bonus multiplier into it
 bonusTex = Screen('OpenOffscreenWindow', MainWindow, yellow, [0 0 bonusWindowWidth bonusWindowHeight]);
 %Screen('FrameRect', bonusTex, yellow, [], 8);
-Screen('TextSize', bonusTex, 40);
+Screen('TextSize', bonusTex, 42);
 Screen('TextFont', bonusTex, 'Calibri');
-Screen('TextStyle', bonusTex, 0);
-DrawFormattedText(bonusTex, [num2str(bigMultiplier), ' x  bonus trial!'], 'center', 15, black);
+Screen('TextStyle', bonusTex, 1);
+DrawFormattedText(bonusTex, [num2str(bigMultiplier), ' x  bonus trial!'], 'center', 'center', black);
+
+errorTex = Screen('OpenOffscreenWindow', MainWindow, black, [0 0 bonusWindowWidth bonusWindowHeight]);
+Screen('TextSize', errorTex, 40);
+Screen('TextFont', errorTex, 'Courier New');
+Screen('TextStyle', errorTex, 1);
+[~, ~, errorBox] = DrawFormattedText(errorTex, 'ERROR', 'center', 'center', white, [], [], [], 1.5);
+errorBoxW = errorBox(3)-errorBox(1);
+errorBoxH = errorBox(4)-errorBox(2);
 
 
 
 
 if exptPhase == 0
     numTrials = pracTrials;
-    configTypes = 4;
-    DATA.practrialInfo = zeros(pracTrials, 11);
-    
-    distractArray = zeros(1, pracTrials);
+    DATA.practrialInfo = zeros(pracTrials, 13);    
+    distractArrayPre = zeros(1, pracTrials);
     configArray = zeros(1, pracTrials);
-    distractArray(1 : pracTrials) = 5;
-    configArray(1:pracTrials) = [ones(1,pracTrials/2)*3 ones(1,pracTrials/2)*4];
+    distractArrayPre(1 : pracTrials) = 5;
+    distractArrayPost(1 : pracTrials) = 5;
+    configArray(1:pracTrials) = ones(1,pracTrials)*5;
     configArrayPre = configArray;
     configArrayPost = configArray;
 else
@@ -178,17 +196,18 @@ else
     if exptSession == 2
         switch condition
             case 1
-                valueLevels = [1 3];
+                valueLevelsPost = [1 3];
             case 2
-                valueLevels = [2 4];
+                valueLevelsPost = [2 4];
         end
     else
-        valueLevels = [1:4];
+        valueLevelsPost = 1:4;
     end
-    DATA.expttrialInfo = zeros(exptTrials, 17);
+    valueLevelsPre = 1:4;
+    DATA.expttrialInfo = zeros(exptTrials, 19);
     
-    distractArray = zeros(1,exptTrialsPerBlock);
-    distractArray = repmat(valueLevels,1,exptTrialsPerBlock/length(valueLevels));
+    distractArrayPre = repmat(valueLevelsPre,1,exptTrialsPerBlock/length(valueLevelsPre));
+    distractArrayPost = repmat(valueLevelsPost,1,exptTrialsPerBlock/length(valueLevelsPost));
     
     configArrayPre = ones(1,exptTrialsPerBlock)*5; %random configurations for pre-training blocks
     configArrayPost = [ones(1,exptTrialsPerBlock/4) ones(1,exptTrialsPerBlock/4)*2 ones(1,exptTrialsPerBlock/4)*3 ones(1,exptTrialsPerBlock/4)*4]; %equal proportion of critical configurations for post-training blocks
@@ -197,8 +216,8 @@ end
 
 totalPay = 0;
 
-tempTrialOrder(:,:,1) = [distractArray' configArrayPre']; %odd trial order
-tempTrialOrder(:,:,2) = [distractArray' configArrayPost']; %even trial order
+tempTrialOrder(:,:,1) = [distractArrayPre' configArrayPre']; % pre-training trial order
+tempTrialOrder(:,:,2) = [distractArrayPost' configArrayPost']; % post-training trial order
 
 shuffled_trialOrder = shuffleTrialorder(tempTrialOrder(:,:,1), exptPhase);   % Calls a function to shuffle the first block of trials
 shuffled_distractArray = shuffled_trialOrder(:,1);
@@ -208,8 +227,8 @@ trialCounter = 0;
 block = 1;
 trials_since_break = 0;
 
-rightPos = [7:10];
-leftPos = [2:5];
+rightPos = 7:10;
+leftPos = 2:5;
 midlinePos = [1 6];
 
 RestrictKeysForKbCheck([KbName('4'), KbName('5')]);   % Only accept keypresses from numpad keys 4 and 5
@@ -246,7 +265,7 @@ for trial = 1 : numTrials
             else
                 availDistractorPos = leftPos;
             end
-            availDistractorPos(targetLoc) = [];
+            availDistractorPos(availDistractorPos(:)==targetLoc) = [];
         case 4 %lateral target, contralateral distractor
             availTargetPos = [leftPos rightPos];
             targetLoc = availTargetPos(randi(length(availTargetPos)));
@@ -256,13 +275,20 @@ for trial = 1 : numTrials
                 availDistractorPos = rightPos;
             end
         case 5 %random configuration
-            availTargetPos = [1:10];
+            availTargetPos = 1:10;
             targetLoc = availTargetPos(randi(length(availTargetPos)));
             if distractType > 2 && distractType < 5 %target = distractor
                 availDistractorPos = targetLoc;
+            elseif distractType == 5
+                if randi(2) == 1
+                    availDistractorPos = targetLoc;
+                else
+                    availDistractorPos = availTargetPos;
+                    availDistractorPos(availDistractorPos(:)==targetLoc) = [];
+                end
             else %target /= distractor
                 availDistractorPos = availTargetPos;
-                availDistractorPos(targetLoc) = [];
+                availDistractorPos(availDistractorPos(:)==targetLoc) = [];
             end            
     end
     
@@ -379,7 +405,7 @@ for trial = 1 : numTrials
     %%%                                                                 %%%
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
-    if runEEG == 1
+    if exptSession == 2
         triggerOn = 0;
         triggerFB = 0;
         if exptPhase == 0
@@ -417,6 +443,9 @@ for trial = 1 : numTrials
                     triggerOn = triggerOn + 60; %no distractor (only relevant to pre-training blocks where target is coloured)
             end
         end
+    else
+        triggerOn = 0;
+        triggerFB = 0;
     end
     
     Screen('FillRect',MainWindow, black);
@@ -517,8 +546,11 @@ for trial = 1 : numTrials
                 totalPay = totalPay - trialPay;
                 fbStr = ['Lose ', char(nf.format(trialPay)), ' points'];
                 %Beeper;
-                Screen('TextSize', MainWindow, 40);
-                DrawFormattedText(MainWindow, 'ERROR', 'center', bonusWindowTop + bonusWindowHeight + 80 , white);
+                Screen('DrawTexture', MainWindow, errorTex, errorBox, [scr_centre(1)-50-errorBoxW   scr_centre(2)-errorBoxH/2   scr_centre(1)-50    scr_centre(2)+errorBoxH/2]);
+                Screen('DrawTexture', MainWindow, errorTex', errorBox, [scr_centre(1)+50    scr_centre(2)-errorBoxH/2   scr_centre(1)+50+errorBoxW     scr_centre(2)+errorBoxH/2]);
+                %Screen('TextSize', MainWindow, 40);
+                
+                %DrawFormattedText(MainWindow, 'ERROR', 'center', bonusWindowTop + bonusWindowHeight + 80 , white);
                 trialPay = -trialPay;   % This is so it records correctly in the data file
                 triggerFB = 9;
                 
@@ -528,8 +560,8 @@ for trial = 1 : numTrials
                 triggerFB = 8;
             end
             
-            Screen('TextSize', MainWindow, 26);
-            DrawFormattedText(MainWindow, format_payStr(totalPay + starting_total_points), 'center', 740, white);   
+            Screen('TextSize', MainWindow, 32);
+            DrawFormattedText(MainWindow, format_payStr(totalPay + starting_total_points), 'center', scr_centre(2)+150, white);   
         end
     end
     
@@ -554,16 +586,16 @@ for trial = 1 : numTrials
     
     
     if exptPhase == 0
-        DATA.practrialInfo(trial,:) = [exptSession, trial, targetLoc, targetType, distractLoc, distractType, singletonType, shuffled_configArray(trialCounter), timeout, correct, rt, fix_pause];
+        DATA.practrialInfo(trial,:) = [exptSession, trial, targetLoc, targetType, distractLoc, distractType, singletonType, shuffled_configArray(trialCounter), timeout, correct, rt, fix_pause, triggerOn];
     else
-        DATA.expttrialInfo(trial,:) = [exptSession, block, trial, trialCounter, trials_since_break, targetLoc, targetType, distractLoc, distractType, singletonType, shuffled_configArray(trialCounter), timeout, correct, rt, roundRT, trialPay, totalPay, fix_pause];
+        DATA.expttrialInfo(trial,:) = [exptSession, block, trial, trialCounter, trials_since_break, targetLoc, targetType, distractLoc, distractType, singletonType, shuffled_configArray(trialCounter), timeout, correct, rt, roundRT, trialPay, totalPay, fix_pause, triggerOn];
         
         if mod(trial, exptTrialsPerBlock) == 0
             if exptSession == 2
-                if  rem(block, preFrequency) ~= 0
-                    nextBlockType = 2;
+                if  rem(block, preFrequency) == 0
+                    nextBlockType = 1; %next block type is a pretraining block
                 else
-                    nextBlockType = 1;
+                    nextBlockType = 2; %next block type is a post-training block
                 end
             else
                 nextBlockType = 1;
@@ -577,7 +609,7 @@ for trial = 1 : numTrials
         
         if (mod(trial, exptTrialsBeforeBreak) == 0 && trial ~= numTrials);
             save(datafilename, 'DATA');
-            take_a_break(rem(block,2), breakDuration, initialPause, totalPay, block, maxBlocks);
+            take_a_break(nextBlockType, breakDuration, initialPause, totalPay, block, maxBlocks);
             trials_since_break = 0;
         end
         
@@ -620,7 +652,7 @@ function aStr = format_payStr(ii)
 global nf
 
 if ii < 0
-    aStr = ['-', char(nf.format(ii)), '  total'];
+    aStr = [char(nf.format(ii)), '  total'];
 else
     aStr = [char(nf.format(ii)), '  total'];
 end
@@ -632,28 +664,28 @@ end
 
 function take_a_break(nextBlockType, breakDur, pauseDur, currentTotal, nextBlockNum, maxBlockNum)
 
-global MainWindow white address runEEG exptSession starting_total_points gray
+global MainWindow white address runEEG exptSession starting_total_points gray nf
 
 if exptSession == 2
-    if nextBlockType == 0 %next block is odd (pre-training block)
-        breakText = ['Time for a break\n\nSit back, relax for a moment! The experimenter will restart the task in a few moments\n\n\nIn the next block, the target MAY or MAY NOT be coloured.'...
-            '\n\n\nYou WILL be told how many points you won or lost after each trial.\n\n\nRemember that the faster you make correct responses, the more you will earn in this task!'...
-            '\n\n\nSo far you have earned ' char(nf.format(currentTotal + starting_total_points)) ' points all together.'];
-    else %next block is even (post-training block)
-        breakText = ['Time for a break\n\nSit back, relax for a moment! The experimenter will restart the task in a few moments\n\n\nIn the next block, the target WILL NEVER be coloured.'...
-            '\n\n\nYou WILL NOT be told how many points you won or lost after each trial. But you will still be earning points!\n\n\nRemember that the faster you make correct responses, the more you will earn in this task!'...
-            '\n\n\nSo far you have earned ' char(nf.format(currentTotal + starting_total_points)) ' points all together.'];
+    if nextBlockType == 1 %next block is a pre-training block
+        breakText = ['Time for a break\n\nSit back, relax for a moment! The experimenter will restart the task in a few moments\n\nIn the next block, the target MAY or MAY NOT be coloured.'...
+            '\n\nYou WILL be told how many points you won or lost after each trial.\n\nRemember that the faster you make correct responses, the more you will earn in this task!'...
+            '\n\nSo far you have earned ' char(nf.format(currentTotal + starting_total_points)) ' points.'];
+    else %next block is a post-training block
+        breakText = ['Time for a break\n\nSit back, relax for a moment! The experimenter will restart the task in a few moments\n\nIn the next block, the target WILL NEVER be coloured.'...
+            '\n\nYou WILL NOT be told how many points you won or lost after each trial. But you will still be earning points!\n\nRemember that the faster you make correct responses, the more you will earn in this task!'...
+            '\n\nSo far you have earned ' char(nf.format(currentTotal + starting_total_points)) ' points.'];
     end
 else
      breakText = ['Time for a break\n\nSit back, relax for a moment! You will be able to carry on in ', num2str(breakDur),' seconds\n\n\nRemember that the faster you make correct responses, the more you will earn in this task!'...
-         '\n\n\nSo far you have earned ' char(nf.format(currentTotal + starting_total_points)) ' points all together.'];
+         '\n\n\nSo far you have earned ' char(nf.format(currentTotal + starting_total_points)) ' points.'];
 end
         
     
 blocksLeftText = num2str(maxBlockNum-(nextBlockNum-1));
 
 DrawFormattedText(MainWindow, breakText, 'center', 'center', white, 50, [], [], 1.5);
-DrawFormattedText(MainWindow, blocksLeftText, 'right', [] , gray, 50, [], [], 1.5);
+DrawFormattedText(MainWindow, blocksLeftText, 1870, 50, gray, [], [], [], 1.5); % Displays the number of blocks remaining in upper right corner of break screen.
 
 Screen(MainWindow, 'Flip'); if runEEG == 1; outp(address,254); end %send break trigger
 
@@ -661,11 +693,10 @@ if exptSession == 1
     WaitSecs(breakDur);
     RestrictKeysForKbCheck(KbName('Space'));   % Only accept spacebar
     DrawFormattedText(MainWindow, 'Please place your right index and middle fingers on the 4 and 5 keys\n\nand press the spacebar when you are ready to continue', 'center', 'center' , white);
+    Screen(MainWindow, 'Flip');
 else
     RestrictKeysForKbCheck(KbName('t')); %Only accept "T", for experimenter to continue
 end
-
-Screen(MainWindow, 'Flip');
 
 KbWait([], 2);
 if runEEG == 1; outp(address,255); end %send continue after break trigger

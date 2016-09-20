@@ -25,7 +25,7 @@ instructStr3 = ['IMPORTANT:  Some of the trials will be BONUS trials! On these t
 
 instructStr4 = 'On some blocks, you will be told how many points you won or lost after each trial, and the total points earned so far in the experiment.\n\nHowever, on other blocks, you will not be told how many points you have won or lost until the break screen. You will still be earning points on these trials, so it is important that you continue to try and respond as quickly as possible while still remaining accurate.\n\nAt the end of each session of the experiment, the points that you have earned will be converted into money, and you will be shown how much you have earned so far.\n\nMost participants are able to earn between $20 and $35 across both sessions of the experiment.';
 
-instructStr5 = 'IMPORTANT: Some blocks of the task will be the same as the previous session, where the target MAY or MAY NOT be coloured. However, in other blocks, the target will NEVER be coloured, so you should ignore any coloured shapes in these blocks.\n\nThere will be instructions on screen and from the experimenter throughout the experiment to let you know what type of block will be next.';
+instructStr5 = 'IMPORTANT: Some blocks of the task will be the same as the previous session, where the target MAY or MAY NOT be coloured.\n\nHowever, in other blocks, the target will NEVER be coloured, so you should ignore any coloured shapes in these blocks.';
 
 
 if exptSession == 2
@@ -58,7 +58,7 @@ end
 function show_Instructions(instrTrial, insStr, instrPause)
 
 global MainWindow scr_centre black white yellow
-global bigMultiplier
+global bigMultiplier exptSession
 
 cyan = [0 255 255];
 
@@ -90,9 +90,13 @@ end
 
 if instrTrial == 3 || instrTrial == 5
     if instrTrial == 3
-        extraStr = ['So you will earn much more for correct responses on \n"', num2str(bigMultiplier), ' x bonus" trials than on standard trials. However, you will not be told whether a trial was a "', num2str(bigMultiplier), ' x bonus" trial until after you have made your response.'];
+        if exptSession == 1
+            extraStr = ['So you will earn much more for correct responses on \n"', num2str(bigMultiplier), ' x bonus" trials than on standard trials. However, you will not be told whether a trial was a "', num2str(bigMultiplier), ' x bonus" trial until after you have made your response.'];
+        else
+            extraStr = ['So you will earn much more for correct responses on \n"', num2str(bigMultiplier), ' x bonus" trials than on standard trials.'];
+        end
     else
-        extraStr = ['There will be instructions on the screen and from the experimenter between blocks to let you know which type of block will be next.']; 
+        extraStr = ['There will be instructions on the screen and from the experimenter between blocks to let you know which type of block will be next.\n\nIn the first block, the target MAY or MAY NOT be coloured.']; 
     end
     DrawFormattedText(MainWindow, extraStr, scr_centre(1) - instrBox_width / 2, textTop + instrBox_height + 100, white, 60, [], [], 1.5);
 end

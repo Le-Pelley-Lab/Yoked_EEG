@@ -17,7 +17,10 @@ global distract_col colourName
 global white black gray yellow
 global bigMultiplier smallMultiplier
 global zeroPayRT condition
-global address nf runEEG
+global address nf runEEG testing
+
+
+testing = 1; % Change this to 0 when ready to run for real
 
 nf = java.text.DecimalFormat;
 
@@ -147,7 +150,11 @@ DATA.start_time = datestr(now,0);
 if exptSession == 1
     runEEG = 0;
 else
-    runEEG = 1; %this should be 1 so that EEG triggers are sent in session 2
+    if testing == 1
+        runEEG = 0; % allows for testing away from EEG setup
+    else
+        runEEG = 1; % this should be 1 so that EEG triggers are sent in session 2
+    end
 end
 
 % generate a random seed using the clock, then use it to seed the random
@@ -190,10 +197,10 @@ distract_col = zeros(5,3);
 
 distract_col(5,:) = yellow;       % Practice colour
 if colBalance == 1
-    distract_col(1,:) = orange;      % High-value distractor colour
+    distract_col(1,:) = orange;    % High-value distractor colour
     distract_col(2,:) = blue;      % Low-value distractor colour
-    distract_col(3,:) = green; %High-value target colour
-    distract_col(4,:) = pink; %Low-value target colour
+    distract_col(3,:) = green;     % High-value target colour
+    distract_col(4,:) = pink;      % Low-value target colour
 elseif colBalance == 2
     distract_col(1,:) = blue; 
     distract_col(2,:) = orange;

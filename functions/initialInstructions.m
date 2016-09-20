@@ -6,7 +6,7 @@ global address runEEG exptSession
 
 if runEEG == 1; outp(address,77); end %start of initial instructions trigger
 
-instructStr1 = 'On each trial a dot will appear, this to warn you that the trial is about to start. Then a set of shapes will appear; two examples are shown below.';
+instructStr1 = 'On each trial a dot will appear, this is to warn you that the trial is about to start. Then a set of shapes will appear; two examples are shown below.';
 if keyCounterbal == 1
     word1 = 'HORIZONTAL';
     word2 = 'VERTICAL';
@@ -19,7 +19,7 @@ instructStr2 = ['Each of these shapes contains a line. Your task is to respond t
 instructStr3 = ['If the line inside the target is ', word1,', you should press the "4" button on the number pad with your right index finger. If the line is ',word2,', you should press the "5" button on the number pad with your right middle finger.'];
 
 if exptSession == 2
-    instructStr4 = 'You should respond as fast as you can, but you should try to avoid making errors.\n\nPlease keep your eyes fixated on the dot in the centre of the screen throughout the task. This allows us to get better EEG recordings, and is also quickest way to locate the target. The experimenter will give you feedback on how many eye movements you are making. If you continue to make too many eye movements, the experimenter will cancel the rest of the experiment and you will not be able to earn more points.';
+    instructStr4 = 'You should respond as fast as you can, but you should try to avoid making errors.\n\nPlease keep your eyes fixated on the dot in the centre of the screen throughout the task. This allows us to get better EEG recordings, and is also quickest way to locate the target.\n\nThe experimenter will give you feedback on how many eye movements you are making. If you make too many eye movements, the experimenter will cancel the rest of the experiment and you will not be able to earn more points.';
 else
     instructStr4 = 'You should respond as fast as you can, but you should try to avoid making errors.\n\nPlease keep your eyes fixated on the dot in the centre of the screen throughout the task. This will allow us to get better EEG recordings in the second session, so it is important to practice now. It is also quickest way to locate the target.';
 end
@@ -74,7 +74,7 @@ if instrTrial < 2
 elseif instrTrial == 2
     Screen('PutImage', MainWindow, imaLDcolouredTarget, exImageRectLeft); % put left image on screen
     Screen('PutImage', MainWindow, imaRDcolouredTarget, exImageRectRight); % put right image on screen
-else
+elseif instrTrial == 3
     Screen('PutImage', MainWindow, imaLTcolouredTarget, exImageRectLeft); % put left image on screen
     Screen('PutImage', MainWindow, imaRTcolouredTarget, exImageRectRight); % put right image on screen
 end
