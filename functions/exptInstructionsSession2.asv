@@ -23,9 +23,9 @@ instructStr2 = ['From now on, you will be able to earn money for correct respons
 
 instructStr3 = ['IMPORTANT:  Some of the trials will be BONUS trials! On these trials the amount that you win or lose will be multiplied by ', num2str(bigMultiplier),'.'];
 
-instructStr4 = 'On some blocks, you will be told how many points you won or lost after each trial, and the total points earned so far in the experiment.\n\nHowever, on other blocks, you will not be told how many points you have won or lost until the break screen. You will still be earning points on these trials, so it is important that you continue to try and respond as quickly as possible while still remaining accurate.\n\nAt the end of each session of the experiment, the points that you have earned will be converted into money, and you will be shown how much you have earned so far.\n\nMost participants are able to earn between $20 and $35 across both sessions of the experiment.';
+instructStr4 = 'On some blocks, you will be told how many points you won or lost after each trial, and the total points earned so far in the experiment.\n\nHowever, on other blocks, you will not be told how many points you have won or lost until the break screen.\n\nAt the end of each session of the experiment, the points that you have earned will be converted into money, and you will be shown how much you have earned so far.\n\nMost participants are able to earn between $20 and $35 across both sessions of the experiment.';
 
-instructStr5 = 'IMPORTANT: Some blocks of the task will be the same as the previous session, where the target MAY or MAY NOT be coloured. However, in other blocks, the target will NEVER be coloured, so you should ignore any coloured shapes in these blocks.\n\nThere will be instructions on screen and from the experimenter throughout the experiment to let you know what type of block will be next.';
+instructStr5 = 'IMPORTANT: Some blocks of the task will be the same as the previous session, where the target MAY or MAY NOT be coloured. However, in other blocks, the target will NEVER be coloured, so you should ignore any coloured shapes in these blocks';
 
 
 if exptSession == 2

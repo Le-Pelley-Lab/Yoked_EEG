@@ -25,3 +25,10 @@ Include some "refresher" blocks to keep people reminded of the colour-reward con
 Control experiment:
 
 Same as reward experiment but test low target vs low reward in the EEG phase.
+
+TO DO:
+
+- Initial instructions for EEG expt that reward information will be given at the end of the experiment
+- Same instructions for blocks (summary feedback on blocks?)
+- Adjust total number of trials so that we get a nice even number
+- Include block number somewhere on FB screen so that experimenter knows how long is left in the experiment.
