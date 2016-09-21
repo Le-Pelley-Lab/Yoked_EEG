@@ -16,6 +16,7 @@ global runEEG condition
 timeoutDuration = 2;     % 2 timeout duration
 iti = 0;            % 0.1
 onscreenAfterResponse = 0.1; %time that display remains onscreen after response
+minOnscreenTime = 0.6;
 correctFBDuration = [0.7, 1];       %[0.001, 0.001]    [0.7, 1]  Practice phase feedback duration  1 Main task feedback duration
 errorFBDuration = [0.7, 1];       %[0.001, 0.001]      [0.7, 1.5]  Practice phase feedback duration  1.5 Main task feedback duration
 
@@ -220,6 +221,7 @@ tempTrialOrder(:,:,1) = [distractArrayPre' configArrayPre']; % pre-training tria
 tempTrialOrder(:,:,2) = [distractArrayPost' configArrayPost']; % post-training trial order
 
 shuffled_trialOrder = shuffleTrialorder(tempTrialOrder(:,:,1), exptPhase);   % Calls a function to shuffle the first block of trials
+nextBlockType = 1; %first block is a pre-training block
 shuffled_distractArray = shuffled_trialOrder(:,1);
 shuffled_configArray = shuffled_trialOrder(:,2);
 
@@ -538,30 +540,40 @@ for trial = 1 : numTrials
             end
             
             if winMultiplier(distractType) == bigMultiplier
-                Screen('DrawTexture', MainWindow, bonusTex, [], [scr_centre(1)-bonusWindowWidth/2   bonusWindowTop   scr_centre(1)+bonusWindowWidth/2    bonusWindowTop+bonusWindowHeight]);
+                if nextBlockType == 1
+                    Screen('DrawTexture', MainWindow, bonusTex, [], [scr_centre(1)-bonusWindowWidth/2   bonusWindowTop   scr_centre(1)+bonusWindowWidth/2    bonusWindowTop+bonusWindowHeight]);
+                end
             end
             
             
             if correct == 0
                 totalPay = totalPay - trialPay;
-                fbStr = ['Lose ', char(nf.format(trialPay)), ' points'];
-                %Beeper;
-                Screen('DrawTexture', MainWindow, errorTex, errorBox, [scr_centre(1)-50-errorBoxW   scr_centre(2)-errorBoxH/2   scr_centre(1)-50    scr_centre(2)+errorBoxH/2]);
-                Screen('DrawTexture', MainWindow, errorTex', errorBox, [scr_centre(1)+50    scr_centre(2)-errorBoxH/2   scr_centre(1)+50+errorBoxW     scr_centre(2)+errorBoxH/2]);
-                %Screen('TextSize', MainWindow, 40);
-                
-                %DrawFormattedText(MainWindow, 'ERROR', 'center', bonusWindowTop + bonusWindowHeight + 80 , white);
+                if nextBlockType == 1
+                    fbStr = ['Lose ', char(nf.format(trialPay)), ' points'];
+                    Screen('DrawTexture', MainWindow, errorTex, errorBox, [scr_centre(1)-50-errorBoxW   scr_centre(2)-errorBoxH/2   scr_centre(1)-50    scr_centre(2)+errorBoxH/2]);
+                    Screen('DrawTexture', MainWindow, errorTex', errorBox, [scr_centre(1)+50    scr_centre(2)-errorBoxH/2   scr_centre(1)+50+errorBoxW     scr_centre(2)+errorBoxH/2]);
+                else
+                    fbStr = 'ERROR';
+                end
                 trialPay = -trialPay;   % This is so it records correctly in the data file
                 triggerFB = 9;
-                
             elseif correct == 1
                 totalPay = totalPay + trialPay;
-                fbStr = ['+', char(nf.format(trialPay)), ' points'];
+                if nextBlockType == 1
+                    fbStr = ['+', char(nf.format(trialPay)), ' points'];
+                else
+                    fbStr = 'correct';
+                end
                 triggerFB = 8;
             end
             
             Screen('TextSize', MainWindow, 32);
-            DrawFormattedText(MainWindow, format_payStr(totalPay + starting_total_points), 'center', scr_centre(2)+150, white);   
+            if nextBlockType == 1
+                totalStr = format_payStr(totalPay + starting_total_points);
+            else
+                totalStr = '???  total';
+            end
+            DrawFormattedText(MainWindow, totalStr, 'center', scr_centre(2)+150, white);   
         end
     end
     
@@ -569,9 +581,14 @@ for trial = 1 : numTrials
     DrawFormattedText(MainWindow, fbStr, 'center', scr_centre(2) + 75, yellow);
     Screen('DrawTexture', MainWindow, fixationTex, [], fixRect);
     
+    
     WaitSecs(onscreenAfterResponse-(GetSecs-et));
     % wait until 100ms after response is registered before presenting
     % feedback. Check using EEG triggers.
+    
+    WaitSecs(minOnscreenTime-(GetSecs-st));
+    % search display must remain onscreen for at least 600ms, helps avoid
+    % offset ERPs for trials with fast responses.
 
     Screen('Flip', MainWindow); if runEEG == 1; outp(address, triggerFB); end
     if correct == 0
@@ -664,28 +681,29 @@ end
 
 function take_a_break(nextBlockType, breakDur, pauseDur, currentTotal, nextBlockNum, maxBlockNum)
 
-global MainWindow white address runEEG exptSession starting_total_points gray nf
+global MainWindow white address runEEG exptSession starting_total_points gray nf yellow
 
 if exptSession == 2
     if nextBlockType == 1 %next block is a pre-training block
         breakText = ['Time for a break\n\nSit back, relax for a moment! The experimenter will restart the task in a few moments\n\nIn the next block, the target MAY or MAY NOT be coloured.'...
-            '\n\nYou WILL be told how many points you won or lost after each trial.\n\nRemember that the faster you make correct responses, the more you will earn in this task!'...
-            '\n\nSo far you have earned ' char(nf.format(currentTotal + starting_total_points)) ' points.'];
+            '\n\nYou WILL be told how many points you won or lost after each trial.\n\nRemember that the faster you make correct responses, the more you will earn in this task!'];
+        totalText = ['\n\nSo far you have earned ' char(nf.format(currentTotal + starting_total_points)) ' points.'];
     else %next block is a post-training block
         breakText = ['Time for a break\n\nSit back, relax for a moment! The experimenter will restart the task in a few moments\n\nIn the next block, the target WILL NEVER be coloured.'...
-            '\n\nYou WILL NOT be told how many points you won or lost after each trial. But you will still be earning points!\n\nRemember that the faster you make correct responses, the more you will earn in this task!'...
-            '\n\nSo far you have earned ' char(nf.format(currentTotal + starting_total_points)) ' points.'];
+            '\n\nYou WILL NOT be told how many points you won or lost after each trial. But you will still be earning points!\n\nRemember that the faster you make correct responses, the more you will earn in this task!'];
+        totalText = ['\n\nSo far you have earned ' char(nf.format(currentTotal + starting_total_points)) ' points.'];
     end
 else
-     breakText = ['Time for a break\n\nSit back, relax for a moment! You will be able to carry on in ', num2str(breakDur),' seconds\n\n\nRemember that the faster you make correct responses, the more you will earn in this task!'...
-         '\n\n\nSo far you have earned ' char(nf.format(currentTotal + starting_total_points)) ' points.'];
+     breakText = ['Time for a break\n\nSit back, relax for a moment! You will be able to carry on in ', num2str(breakDur),' seconds\n\n\nRemember that the faster you make correct responses, the more you will earn in this task!'];
+     totalText = ['\n\n\nSo far you have earned ' char(nf.format(currentTotal + starting_total_points)) ' points.'];
 end
         
     
 blocksLeftText = num2str(maxBlockNum-(nextBlockNum-1));
 
-DrawFormattedText(MainWindow, breakText, 'center', 'center', white, 50, [], [], 1.5);
-DrawFormattedText(MainWindow, blocksLeftText, 1870, 50, gray, [], [], [], 1.5); % Displays the number of blocks remaining in upper right corner of break screen.
+[~,ny,~] = DrawFormattedText(MainWindow, breakText, 'center', 'center', white, 50, [], [], 1.5);
+DrawFormattedText(MainWindow, totalText, 'center', ny, yellow, 50, [], [], 1.5);
+DrawFormattedText(MainWindow, blocksLeftText, 1870, 50, [80 80 80], [], [], [], 1.5); % Displays the number of blocks remaining in upper right corner of break screen.
 
 Screen(MainWindow, 'Flip'); if runEEG == 1; outp(address,254); end %send break trigger
 

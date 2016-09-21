@@ -24,7 +24,7 @@ testing = 1; % Change this to 0 when ready to run for real
 
 nf = java.text.DecimalFormat;
 
-screenNum = 1;
+screenNum = 0;
 
 
 zeroPayRT = 1000;       % 1000
