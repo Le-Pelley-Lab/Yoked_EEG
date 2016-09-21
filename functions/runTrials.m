@@ -47,13 +47,13 @@ else
         maxBlocks = 12;
     else
         pracTrials = 32; %increased number of practice trials for eye movements
-        maxBlocks = 26;
+        maxBlocks = 36; %1728 trials total. 1296 trials of post-training. 162 trials for each trial type/configuration combo
     end
 end
 
 exptTrials = maxBlocks * exptTrialsBeforeBreak; 
 % Session 1: 12 * exptTrialsBeforeBreak = 576;
-% Session 2: 26 * exptTrialsBeforeBreak = 1248;
+% Session 2: 36 * exptTrialsBeforeBreak = 1728;
 
 stimLocs = 10;       % Number of stimulus locations
 stim_size = 165;     % 165 Size of diamond stimulus. = Visual angle of 4.39 dva at 57cm from screen. Slightly larger than diameter of circles, but should be equal area of grey outline

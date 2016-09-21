@@ -30,7 +30,7 @@ TO DO:
 
 - Initial instructions for EEG expt that reward information will be given at the end of the experiment (Y)
 - Same instructions for blocks (summary feedback on blocks?) (Y)
-- Adjust total number of trials so that we get a nice even number 
+- Adjust total number of trials so that we get a nice even number (Y)
 - Include block number somewhere on FB screen so that experimenter knows how long is left in the experiment. (Y)
 - Fix up awareness test
 - Change so don't show reward feedback on post-training trials
