@@ -39,8 +39,8 @@ if testing == 1
         pracTrials = 2;
         maxBlocks = 2;
     else
-        pracTrials = 2;
-        maxBlocks = 5;
+        pracTrials = 0;
+        maxBlocks = 0;
     end
 else
     if exptSession == 1
@@ -681,7 +681,7 @@ end
 
 function take_a_break(nextBlockType, breakDur, pauseDur, currentTotal, nextBlockNum, maxBlockNum)
 
-global MainWindow white address runEEG exptSession starting_total_points gray nf yellow
+global MainWindow white address runEEG exptSession starting_total_points nf yellow
 
 if exptSession == 2
     if nextBlockType == 1 %next block is a pre-training block

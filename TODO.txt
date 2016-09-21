@@ -33,4 +33,4 @@ TO DO:
 - Adjust total number of trials so that we get a nice even number (Y)
 - Include block number somewhere on FB screen so that experimenter knows how long is left in the experiment. (Y)
 - Fix up awareness test
-- Change so don't show reward feedback on post-training trials
+- Change so don't show reward feedback on post-training trials (Y)

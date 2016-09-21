@@ -17,10 +17,11 @@ function show_Instructions(~, insStr, instrPause)
 global MainWindow scr_centre black white gray
 
 instrWin = Screen('OpenOffscreenWindow', MainWindow, black);
-Screen('TextSize', instrWin, 34);
+Screen('TextFont', instrWin, 'Courier');
+Screen('TextSize', instrWin, 32);
 Screen('TextStyle', instrWin, 1);
 
-[~, ~, instrBox] = DrawFormattedText(instrWin, insStr, 0, 0 , white, 60, [], [], 1.5);
+[~, ~, instrBox] = DrawFormattedText(instrWin, insStr, [], [], white, 60, [], [], 1.5);
 instrBox_width = instrBox(3) - instrBox(1);
 instrBox_height = instrBox(4) - instrBox(2);
 textTop = 150;
@@ -36,7 +37,7 @@ contButtonTop = 800;
 contButtonWin = Screen('OpenOffscreenWindow', MainWindow, gray, [0 0 contButtonWidth contButtonHeight]);
 Screen('TextSize', contButtonWin, 28);
 Screen('TextFont', contButtonWin, 'Arial');
-DrawFormattedText(contButtonWin, 'Click here using the mouse to continue', 'center', contButtonHeight * 0.3, white);
+DrawFormattedText(contButtonWin, 'Click here using the mouse to continue', 'center', 'center', white);
 
 contButtonRect = [scr_centre(1) - contButtonWidth/2   contButtonTop  scr_centre(1) + contButtonWidth/2  contButtonTop + contButtonHeight];
 Screen('DrawTexture', MainWindow, contButtonWin, [], contButtonRect);

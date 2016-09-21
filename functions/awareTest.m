@@ -9,7 +9,7 @@ global stim_size stim_pen
 
 awareTest_iti = 1;
 
-testColours = 2;
+testColours = 4;
 
 valButtonWidth = 300;
 valButtonHeight = 130;
@@ -42,8 +42,8 @@ for i = 1 : 2
 end
 
 
-DrawFormattedText(valButtonWin(1), 'No bonus', 'center', valButtonHeight * 0.3, yellow);
-DrawFormattedText(valButtonWin(2), [num2str(bigMultiplier), ' x bonus trial!'], 'center', valButtonHeight * 0.3, yellow);
+DrawFormattedText(valButtonWin(1), 'No bonus', 'center', 'center', yellow);
+DrawFormattedText(valButtonWin(2), [num2str(bigMultiplier), ' x bonus trial!'], 'center', 'center', yellow);
 
 valButtonRect = zeros(2,4);
 valButtonRect(1,:) = [scr_centre(1) - valButtonWidth/2 - valButtonDisplacement   valButtonTop   scr_centre(1) + valButtonWidth/2 - valButtonDisplacement  valButtonTop + valButtonHeight];
@@ -57,7 +57,7 @@ for i = 1 : confButtons
     Screen('FillRect', confButtonWin(i), gray);
     Screen('TextFont', confButtonWin(i), 'Arial');
     Screen('TextSize', confButtonWin(i), 34);
-    DrawFormattedText(confButtonWin(i), num2str(i), 'center', confButtonHeight * 0.25, white);
+    DrawFormattedText(confButtonWin(i), num2str(i), 'center', 'center', white);
     
     confButtonRect(i,:) = [scr_centre(1) + confButtonWidth * (i - 1 - confButtons/2) + confButtonBetween * (i-1 - (confButtons - 1)/2)    confButtonTop    scr_centre(1) + confButtonWidth * (i - 1 - confButtons/2) + confButtonBetween * (i-1 - (confButtons - 1)/2) + confButtonWidth    confButtonTop + confButtonHeight];
     
@@ -73,14 +73,14 @@ instructStr5 = 'Very\nconfident';
 instructStr4Win = Screen('OpenOffscreenWindow', MainWindow, black);
 Screen('TextSize', instructStr4Win, 20);
 Screen('TextFont', instructStr4Win, 'Arial');
-[~,~,instr4boundsRect] = DrawFormattedText(instructStr4Win, instructStr4, 'center', 0, white, [], [], [], 1.5);
+[~,~,instr4boundsRect] = DrawFormattedText(instructStr4Win, instructStr4, 'center', 'center', white, [], [], [], 1.5);
 instr4width = instr4boundsRect(3) -  instr4boundsRect(1);
 instr4height = instr4boundsRect(4) -  instr4boundsRect(2);
 
 instructStr5Win = Screen('OpenOffscreenWindow', MainWindow, black);
 Screen('TextSize', instructStr5Win, 20);
 Screen('TextFont', instructStr5Win, 'Arial');
-[~,~,instr5boundsRect] = DrawFormattedText(instructStr5Win, instructStr5, 'center', 0, white, [], [], [], 1.5);
+[~,~,instr5boundsRect] = DrawFormattedText(instructStr5Win, instructStr5, 'center', 'center', white, [], [], [], 1.5);
 instr5width = instr5boundsRect(3) -  instr5boundsRect(1);
 instr5height = instr5boundsRect(4) -  instr5boundsRect(2);
 
@@ -108,7 +108,7 @@ for trial = 1 : testColours
     [~,~,instr2boundsRect] = DrawFormattedText(MainWindow, instructStr2, 'center', 390, white, 50, [], [], 1.5);
     Screen('TextSize', MainWindow, oldTextSize);
     
-    circle_top = 200;	% Position of top of sample circle
+    circle_top = 150;	% Position of top of sample circle
     Screen('FrameOval', MainWindow, distract_col(trialOrder(trial),:), [scr_centre(1) - stim_size / 2    circle_top   scr_centre(1) + stim_size / 2    circle_top + stim_size], stim_pen, stim_pen);      % Draw circle
     
     for i = 1 : 2
@@ -127,7 +127,7 @@ for trial = 1 : testColours
     Screen('DrawTexture', MainWindow, instructStr5Win, instr5boundsRect, [confButtonRect(5,1) + confButtonWidth/2 - instr5width/2     confButtonTop + confButtonHeight + rate_instr_below   confButtonRect(5,1) + confButtonWidth/2 + instr5width/2    confButtonTop + confButtonHeight + rate_instr_below + instr5height]);
     
     
-    Screen('FillRect', MainWindow, black, instr2boundsRect);    % Cover up instr2
+    Screen('FillRect', MainWindow, black, instr2boundsRect+[-10 -10 10 10]);    % Cover up instr2
     
     
     clickedValButton = 0;
