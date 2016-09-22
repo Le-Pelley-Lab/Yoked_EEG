@@ -11,7 +11,7 @@ global stim_size stim_pen
 global address exptSession nf
 global runEEG condition
 
-
+standardPriority = Priority;
 
 timeoutDuration = 2;     % 2 timeout duration
 iti = 0;            % 0.1
@@ -37,10 +37,10 @@ end
 if testing == 1
     if exptSession == 1
         pracTrials = 2;
-        maxBlocks = 2;
+        maxBlocks = 3;
     else
         pracTrials = 0;
-        maxBlocks = 0;
+        maxBlocks = 2;
     end
 else
     if exptSession == 1
@@ -77,6 +77,12 @@ winMultiplier(1) = bigMultiplier;         % distractor associated with big win
 winMultiplier(2) = smallMultiplier;     % distractor associated with small win
 winMultiplier(3) = bigMultiplier;       % target associated with big win
 winMultiplier(4) = smallMultiplier;     % distractor associated with big win
+
+
+% Latency testing square
+% if testing == 1
+%     testSquare = Screen('OpenOffscreenWindow', MainWindow, white, [0 0 100 100]);
+% end
 
 % This plots the points of a large diamond, that will be filled with colour
 d_pts = [stim_size/2, 0;
@@ -205,7 +211,7 @@ else
         valueLevelsPost = 1:4;
     end
     valueLevelsPre = 1:4;
-    DATA.expttrialInfo = zeros(exptTrials, 19);
+    DATA.expttrialInfo = zeros(exptTrials, 21);
     
     distractArrayPre = repmat(valueLevelsPre,1,exptTrialsPerBlock/length(valueLevelsPre));
     distractArrayPost = repmat(valueLevelsPost,1,exptTrialsPerBlock/length(valueLevelsPost));
@@ -237,7 +243,22 @@ RestrictKeysForKbCheck([KbName('4'), KbName('5')]);   % Only accept keypresses f
 
 WaitSecs(initialPause);
 
+VBLTime = zeros(1,numTrials);
+StimOnsetTime = zeros(1,numTrials);
+FlipTime = zeros(1,numTrials);
+Missed = zeros(1,numTrials);
+
 for trial = 1 : numTrials
+    maxPriorityLvl = MaxPriority(MainWindow); %find out what the maximum priority level available is
+    Priority(maxPriorityLvl); % Set PTB to higher priority level
+    
+    %Perform an extra calibration of the monitor to estimate monitor
+    %refresh interval. This uses at least 100 valid samples, requiring a
+    %standard deviation of the measurements below 50 microseconds. Will
+    %time out after 20 seconds if can't obtain that level of accuracy.
+    if trial == 1
+        [ ifi nvalid stddev ]= Screen('GetFlipInterval', MainWindow, 100, 0.00005, 20); 
+    end
     
     targetHem = 0; %used to track the hemifield of the target, 1 = left, 2 = right.
     distractHem = 0; %used to track the hemifield of the distractor, 1 = left, 2 = right.
@@ -318,6 +339,8 @@ for trial = 1 : numTrials
     
     fix_pause = round((minFixation + rand*(maxFixation - minFixation))/.01)*.01;    % Creates random fixation interval in range minFixation to maxFixation, rounded to 10ms (updated for better alpha desynch)
     
+    waitframes = ceil(fix_pause/ifi); % find out how many frames we need to wait given our refresh rate
+    
     Screen('FillRect', stimWindow, black);  % Clear the screen from the previous trial by drawing a black rectangle over the whole thing
     Screen('DrawTexture', stimWindow, fixationTex, [], fixRect); %draw fixation dot
     
@@ -370,6 +393,10 @@ for trial = 1 : numTrials
         Screen('DrawLine', stimWindow, gray, lineVert(targetLoc,1), lineVert(targetLoc,2), lineVert(targetLoc,3), lineVert(targetLoc,4), line_pen);
     end
     
+%     if testing == 1
+%         Screen('DrawTexture', stimWindow, testSquare, [], [0 0 100 100]);
+%     end
+    
     %%%%%%%%%%%%%%%%%%%%%%%% STIMULUS EVENT CODES %%%%%%%%%%%%%%%%%%%%%%%%%
     %%%                                                                 %%%
     %%% Hundreds Place %%%
@@ -380,12 +407,12 @@ for trial = 1 : numTrials
     % 1 = Left Side Target, Midline/no Distractor
     % 2 = Left Side Target, Left Side Distractor
     % 3 = Left Side Target, Right Side Distractor
-    % 4 = Left Side Distractor, Midline Target
-    % 5 = Right Side Target, Midline/no Distractor
-    % 6 = Right Side Target, Left Side Distractor
-    % 7 = Right Side Target, Right Side Distractor
-    % 8 = Right Side Distractor, Midline Target
-    % 9 = Midline Target, Midline/no distractor
+    % 4 = Right Side Target, Midline/no Distractor
+    % 5 = Right Side Target, Left Side Distractor
+    % 6 = Right Side Target, Right Side Distractor
+    % 7 = Midline Target, Midline/no Distractor
+    % 8 = Left Side Distractor, Midline Target
+    % 9 = Right Side Distractor, Midline Target
     %%% Ones Place %%%
     % 1 = Low distractor
     % 2 = High distractor
@@ -413,7 +440,7 @@ for trial = 1 : numTrials
         if exptPhase == 0
             triggerOn = triggerOn + 200; %trigger is 200 for all practice trials
         elseif exptPhase == 1
-            if rem(block,preFrequency) ~= 1 %if post-training (EEG) block
+            if nextBlockType == 2 %if post-training (EEG) block
                 triggerOn = triggerOn + 100;
             end
             switch distractType
@@ -430,9 +457,9 @@ for trial = 1 : numTrials
                 case 1
                     triggerOn = triggerOn + 10; %left target
                 case 2
-                    triggerOn = triggerOn + 50; %right target
+                    triggerOn = triggerOn + 40; %right target
                 case 3
-                    triggerOn = triggerOn + 30; %midline target
+                    triggerOn = triggerOn + 70; %midline target
             end
             switch distractHem
                 case 1
@@ -440,9 +467,9 @@ for trial = 1 : numTrials
                 case 2
                     triggerOn = triggerOn + 20; %right distractor
                 case 3
-                    triggerOn = triggerOn + 60; %midline distractor
+                    triggerOn = triggerOn + 0; %midline distractor
                 case 4
-                    triggerOn = triggerOn + 60; %no distractor (only relevant to pre-training blocks where target is coloured)
+                    triggerOn = triggerOn + 0; %no distractor (only relevant to pre-training blocks where target is coloured)
             end
         end
     else
@@ -451,17 +478,20 @@ for trial = 1 : numTrials
     end
     
     Screen('FillRect',MainWindow, black);
-    Screen('DrawTexture', MainWindow, fixationTex, [], fixRect);
-    Screen(MainWindow, 'Flip');     % Clear screen
-    WaitSecs(iti);
     
     Screen('DrawTexture', MainWindow, fixationTex, [], fixRect);
-    Screen(MainWindow, 'Flip');     % Present fixation cross
-    WaitSecs(fix_pause);
+    fixOn = Screen(MainWindow, 'Flip');     % Present fixation cross
+    %WaitSecs(fix_pause);
     
     Screen('DrawTexture', MainWindow, stimWindow);
     
-    st = Screen(MainWindow, 'Flip'); if runEEG == 1; outp(address, triggerOn); end % Send ON trigger    % Present stimuli, and record start time (st) when they are presented.
+    
+    %Now saving a bunch of timestamps for the stimulus presentation. This
+    %allows us to check for timing issues from the PTB end
+    [VBLTime(trial) StimOnsetTime(trial) FlipTime(trial) Missed(trial)] = Screen(MainWindow, 'Flip', fixOn + (waitframes-0.5) * ifi); 
+    if runEEG == 1; outp(address, triggerOn); end % Send ON trigger
+    
+    st = VBLTime(trial); %record start time when stimuli are presented
     
 %     image = Screen('GetImage', MainWindow, [scr_centre(1)-450 scr_centre(2)-450 scr_centre(1)+450 scr_centre(2)+450] );
 %     
@@ -489,9 +519,17 @@ for trial = 1 : numTrials
     %         imwrite(image, 'distractImage.png');
     %     end
     
-    [keyCode, et, timeout] = accKbWait(st, timeoutDuration);
+    if testing == 1
+        et = WaitSecs(0.4);
+        keyCodePressed = 100;
+        timeout = 0;
+    else
+        [keyCode, et, timeout] = accKbWait(st, timeoutDuration);
+        keyCodePressed = find(keyCode, 1, 'first');
+    end
     
-    keyCodePressed = find(keyCode, 1, 'first');
+    Priority(standardPriority); %Revert to standard priority level for less important stuff
+  
     if keyCodePressed == 100
         if runEEG == 1; outp(address, 5); end %left response trigger
     elseif keyCodePressed == 101
@@ -605,8 +643,12 @@ for trial = 1 : numTrials
     if exptPhase == 0
         DATA.practrialInfo(trial,:) = [exptSession, trial, targetLoc, targetType, distractLoc, distractType, singletonType, shuffled_configArray(trialCounter), timeout, correct, rt, fix_pause, triggerOn];
     else
-        DATA.expttrialInfo(trial,:) = [exptSession, block, trial, trialCounter, trials_since_break, targetLoc, targetType, distractLoc, distractType, singletonType, shuffled_configArray(trialCounter), timeout, correct, rt, roundRT, trialPay, totalPay, fix_pause, triggerOn];
-        
+        DATA.expttrialInfo(trial,:) = [exptSession, block, trial, trialCounter, trials_since_break, targetLoc, targetType, distractLoc, distractType, singletonType, shuffled_configArray(trialCounter), timeout, correct, rt, roundRT, trialPay, totalPay, fix_pause, targetHem, distractHem, triggerOn];
+        DATA.ifi = ifi;
+        DATA.VBLTime = VBLTime;
+        DATA.StimOnsetTime = StimOnsetTime;
+        DATA.FlipTime = FlipTime;
+        DATA.Missed = Missed;
         if mod(trial, exptTrialsPerBlock) == 0
             if exptSession == 2
                 if  rem(block, preFrequency) == 0
@@ -681,7 +723,7 @@ end
 
 function take_a_break(nextBlockType, breakDur, pauseDur, currentTotal, nextBlockNum, maxBlockNum)
 
-global MainWindow white address runEEG exptSession starting_total_points nf yellow
+global MainWindow white address runEEG exptSession starting_total_points nf yellow testing
 
 if exptSession == 2
     if nextBlockType == 1 %next block is a pre-training block
@@ -716,7 +758,9 @@ else
     RestrictKeysForKbCheck(KbName('t')); %Only accept "T", for experimenter to continue
 end
 
-KbWait([], 2);
+if testing ~= 1
+    KbWait([], 2);
+end
 if runEEG == 1; outp(address,255); end %send continue after break trigger
 Screen(MainWindow, 'Flip');
 
