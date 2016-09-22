@@ -71,14 +71,14 @@ instructStr4 = 'Not at all\nconfident';
 instructStr5 = 'Very\nconfident';
 
 instructStr4Win = Screen('OpenOffscreenWindow', MainWindow, black);
-Screen('TextSize', instructStr4Win, 20);
+Screen('TextSize', instructStr4Win, 24);
 Screen('TextFont', instructStr4Win, 'Arial');
 [~,~,instr4boundsRect] = DrawFormattedText(instructStr4Win, instructStr4, 'center', 'center', white, [], [], [], 1.5);
 instr4width = instr4boundsRect(3) -  instr4boundsRect(1);
 instr4height = instr4boundsRect(4) -  instr4boundsRect(2);
 
 instructStr5Win = Screen('OpenOffscreenWindow', MainWindow, black);
-Screen('TextSize', instructStr5Win, 20);
+Screen('TextSize', instructStr5Win, 24);
 Screen('TextFont', instructStr5Win, 'Arial');
 [~,~,instr5boundsRect] = DrawFormattedText(instructStr5Win, instructStr5, 'center', 'center', white, [], [], [], 1.5);
 instr5width = instr5boundsRect(3) -  instr5boundsRect(1);
@@ -104,7 +104,7 @@ for trial = 1 : testColours
     instructStr1 = ['What type of trial was it when one of the circles was ', colourName(trialOrder(trial), 1:colourNameLength(trialOrder(trial))),'?'];
     
     DrawFormattedText(MainWindow, instructStr1, 'center', 50, white, 50, [], [], 1.5);
-    oldTextSize = Screen('TextSize', MainWindow, 24);
+    oldTextSize = Screen('TextSize', MainWindow, 28);
     [~,~,instr2boundsRect] = DrawFormattedText(MainWindow, instructStr2, 'center', 390, white, 50, [], [], 1.5);
     Screen('TextSize', MainWindow, oldTextSize);
     
