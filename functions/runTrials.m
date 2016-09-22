@@ -80,9 +80,9 @@ winMultiplier(4) = smallMultiplier;     % distractor associated with big win
 
 
 % Latency testing square
-if testing == 1
-    testSquare = Screen('OpenOffscreenWindow', MainWindow, white, [0 0 100 100]);
-end
+% if testing == 1
+%     testSquare = Screen('OpenOffscreenWindow', MainWindow, white, [0 0 100 100]);
+% end
 
 % This plots the points of a large diamond, that will be filled with colour
 d_pts = [stim_size/2, 0;
@@ -393,9 +393,9 @@ for trial = 1 : numTrials
         Screen('DrawLine', stimWindow, gray, lineVert(targetLoc,1), lineVert(targetLoc,2), lineVert(targetLoc,3), lineVert(targetLoc,4), line_pen);
     end
     
-    if testing == 1
-        Screen('DrawTexture', stimWindow, testSquare, [], [0 0 100 100]);
-    end
+%     if testing == 1
+%         Screen('DrawTexture', stimWindow, testSquare, [], [0 0 100 100]);
+%     end
     
     %%%%%%%%%%%%%%%%%%%%%%%% STIMULUS EVENT CODES %%%%%%%%%%%%%%%%%%%%%%%%%
     %%%                                                                 %%%
