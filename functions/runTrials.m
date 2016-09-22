@@ -36,11 +36,11 @@ end
 
 if testing == 1
     if exptSession == 1
-        pracTrials = 2;
-        maxBlocks = 3;
-    else
         pracTrials = 0;
         maxBlocks = 2;
+    else
+        pracTrials = 0;
+        maxBlocks = 4;
     end
 else
     if exptSession == 1
@@ -520,9 +520,21 @@ for trial = 1 : numTrials
     %     end
     
     if testing == 1
-        et = WaitSecs(0.4);
-        keyCodePressed = 100;
+        et = WaitSecs(0.55);
         timeout = 0;
+        if rand > .05
+            if targetType == 1
+                keyCodePressed = 100;
+            else
+                keyCodePressed = 101;
+            end
+        else
+            if targetType == 1
+                keyCodePressed = 101;
+            else
+                keyCodePressed = 100;
+            end
+        end
     else
         [keyCode, et, timeout] = accKbWait(st, timeoutDuration);
         keyCodePressed = find(keyCode, 1, 'first');
@@ -569,12 +581,12 @@ for trial = 1 : numTrials
         
         if exptPhase == 1       % If this is NOT practice
             
-            roundRT = round(rt);    % Round RT to nearest integer
+            roundRT = round(rt);    % Divide RT by 10 and round to nearest integer. Changed so that numbers of points don't get huge.
             
             if roundRT >= zeroPayRT
                 trialPay = 0;
             else
-                trialPay = (zeroPayRT - roundRT) * winMultiplier(distractType); % Changed so that number of points given is 1000-RT x Multiplier
+                trialPay = round((zeroPayRT - roundRT)/10) * winMultiplier(distractType); % Changed so that number of points given is (1000-RT)/10 x Multiplier
             end
             
             if winMultiplier(distractType) == bigMultiplier

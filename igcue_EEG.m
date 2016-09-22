@@ -19,6 +19,7 @@ global bigMultiplier smallMultiplier
 global zeroPayRT condition
 global address nf runEEG testing
 
+Screen('Preference', 'VisualDebuglevel', 3); %Hides the PTB startup screen when calibrating
 
 testing = 1; % Change this to 0 when ready to run for real
 
@@ -266,7 +267,11 @@ if exptSession == 2
     awareTest;
 end
 
-bonus_payment = bonus_points * 0.0009; % convert points into cents at rate of 1 point = 0.0009 cents
+if condition == 1
+    bonus_payment = bonus_points * 0.0037; % convert points into cents at rate of 1 point = 0.0037 cents.
+else
+    bonus_payment = bonus_points * 0.01; % 1 point = .01 cents. This is for the "non-reward" experiment to match the total outcome
+end
 bonus_payment = 10 * ceil(bonus_payment/10);        % ... round this value UP to nearest 10 cents
 bonus_payment = bonus_payment / 100;    % ... then convert back to dollars
 

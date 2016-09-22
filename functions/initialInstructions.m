@@ -41,7 +41,7 @@ end
 
 function show_Instructions(instrTrial, insStr)
 
-global MainWindow scr_centre black white
+global MainWindow scr_centre black white instrWin
 
 imaLDcoloured=imread('exampleDiamondTarget.jpg', 'jpg');
 imaRDcoloured = imread('exampleCircleTarget.jpg', 'jpg');
@@ -79,6 +79,11 @@ elseif instrTrial == 3
     Screen('PutImage', MainWindow, imaRTcolouredTarget, exImageRectRight); % put right image on screen
 end
 
+if instrTrial > 1
+    RestrictKeysForKbCheck(KbName('Space'));   % Only accept spacebar
+    KbWait([], 2);
+end
+
 Screen(MainWindow, 'Flip');
 
 if instrTrial == 2
@@ -93,9 +98,12 @@ if instrTrial == 2
     Screen(MainWindow, 'Flip');
 end
     
-    RestrictKeysForKbCheck(KbName('Space'));   % Only accept spacebar
-    KbWait([], 2);
     
-    Screen('Close', instrWin);
+    
+    if instrTrial == 4
+        RestrictKeysForKbCheck(KbName('Space'));   % Only accept spacebar
+        KbWait([], 2);
+        Screen('Close', instrWin);
+    end
     
 end
