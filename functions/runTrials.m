@@ -45,9 +45,9 @@ if testing == 1
 else
     if exptSession == 1
         pracTrials = 8;
-        maxBlocks = 12;
+        maxBlocks = 12; % 12 * 48 = 576 pretraining trials
     else
-        pracTrials = 32; %increased number of practice trials for eye movements
+        pracTrials = 32; %increased number of practice trials for eye movement training
         maxBlocks = 36; %1728 trials total. 1296 trials of post-training. 162 trials for each trial type/configuration combo
     end
 end
@@ -56,15 +56,15 @@ exptTrials = maxBlocks * exptTrialsBeforeBreak;
 % Session 1: 12 * exptTrialsBeforeBreak = 576;
 % Session 2: 36 * exptTrialsBeforeBreak = 1728;
 
-stimLocs = 10;       % Number of stimulus locations
-stim_size = 165;     % 165 Size of diamond stimulus. = Visual angle of 4.39 dva at 57cm from screen. Slightly larger than diameter of circles, but should be equal area of grey outline
-circ_stim_size = 124; % 3.3 degrees at 57cm
-stim_pen = 10;      % Pen width of stimuli, 0.3 dva at 57cm
-lineLength = 56;    % 80, 1.5 dva at 57cm. Line of target line segments
-line_pen = 10;       % Pen width of line segments
+stimLocs = 6;       % Number of stimulus locations
+stim_size = 104;     % Matched to Expt 1. (165) Size of diamond stimulus. = Visual angle of 2.58 dva at 60cm from screen. Slightly larger than diameter of circles, but should be equal area of grey outline
+circ_stim_size = 92; % Matched to Expt 1. (124) 3.3 degrees at 57cm
+stim_pen = 8;      % Pen width of stimuli, 0.3 dva at 57cm
+lineLength = 30;    % Matched to Expt 1. (56), 1.5 dva at 57cm. Line of target line segments
+line_pen = 6;       % Matched to Expt 1. (10)Pen width of line segments
 
-circ_diam = 348;    % 348 for 16:9 23 inch screen = 9.2 deg vis angle from centre. Diameter of imaginary circle on which stimuli are positioned
-fix_size = 20;      % This is the side length of the fixation cross. Approx 1 dva
+circ_diam = 200;    % Matched to Expt 1. (348) for 16:9 23 inch screen = 9.2 deg vis angle from centre. Diameter of imaginary circle on which stimuli are positioned
+fix_size = 40;      % Matched to Expt 1. This is the side length of the fixation cross. Approx 1 dva
 
 bonusWindowWidth = 400;
 bonusWindowHeight = 100;
@@ -104,6 +104,8 @@ small_d_pts = [stim_size/2, d_inset;
 DiamondTex(1) = Screen('OpenOffscreenWindow', MainWindow, black, [0 0 stim_size stim_size]);
 Screen('FillPoly', DiamondTex(1), gray, d_pts);
 Screen('FillPoly', DiamondTex(1), black, small_d_pts);
+
+% Another offscreen window for the grey circle.
 CircleTex(1) = Screen('OpenOffscreenWindow', MainWindow, black, [0 0 stim_size stim_size]);
 Screen('FrameOval', CircleTex(1), gray, [stim_size/2-circ_stim_size/2 stim_size/2-circ_stim_size/2 stim_size/2+circ_stim_size/2 stim_size/2+circ_stim_size/2], stim_pen, stim_pen);      % Draw coloured target circle
 
@@ -111,13 +113,16 @@ for dd = 1:length(distract_col) %make diamonds in each distractor colour
     DiamondTex(dd+1) = Screen('OpenOffscreenWindow', MainWindow, black, [0 0 stim_size stim_size]);
     Screen('FillPoly', DiamondTex(dd+1), distract_col(dd,:), d_pts);
     Screen('FillPoly', DiamondTex(dd+1), black, small_d_pts);
+    % And circles in each distractor colour
     CircleTex(dd+1) = Screen('OpenOffscreenWindow', MainWindow, black, [0 0 stim_size stim_size]);
     Screen('FrameOval', CircleTex(dd+1), distract_col(dd,:), [stim_size/2-circ_stim_size/2 stim_size/2-circ_stim_size/2 stim_size/2+circ_stim_size/2 stim_size/2+circ_stim_size/2], stim_pen, stim_pen);      % Draw coloured target circle
 end
 
-% Create an offscreen window, and draw the fixation cross in it.
+% Create an offscreen window, and draw the fixation cross in it - matched to expt 1.
 fixationTex = Screen('OpenOffscreenWindow', MainWindow, black, [0 0 fix_size fix_size]);
-Screen('FillOval', fixationTex, white);
+Screen('DrawLine', fixationTex, white, 0, fix_size/2, fix_size, fix_size/2, 4);
+Screen('DrawLine', fixationTex, white, fix_size/2, 0, fix_size/2, fix_size, 4);
+%Screen('FillOval', fixationTex, white);
 
 % Create a rect for the fixation cross
 fixRect = [scr_centre(1) - fix_size/2    scr_centre(2) - fix_size/2   scr_centre(1) + fix_size/2   scr_centre(2) + fix_size/2];
@@ -127,7 +132,7 @@ fixRect = [scr_centre(1) - fix_size/2    scr_centre(2) - fix_size/2   scr_centre
 % horizontal displacements of these lines (which are equal because lines
 % are at 45 deg).
 
-%obliqueDisp = round(sqrt(lineLength * lineLength / 2));
+obliqueDisp = round(sqrt(lineLength * lineLength / 2));
 
 % Create a matrix containing the six stimulus locations, equally spaced
 % around an imaginary circle of diameter circ_diam
@@ -135,8 +140,8 @@ fixRect = [scr_centre(1) - fix_size/2    scr_centre(2) - fix_size/2   scr_centre
 % target (horizontal / vertical) lines that appear inside each stimulus
 stimCentre = zeros(stimLocs,4);
 stimRect = zeros(stimLocs, 4);
-%lineRight = zeros(stimLocs,4);
-%lineLeft = zeros(stimLocs,4);
+lineRight = zeros(stimLocs,4);
+lineLeft = zeros(stimLocs,4);
 lineVert = zeros(stimLocs,4);
 lineHorz = zeros(stimLocs,4);
 lineOrientation = zeros(1,stimLocs);   % Used below; preallocating for speed
@@ -149,8 +154,8 @@ for i = 0 : stimLocs - 1    % Define rects for stimuli and line segments
     stimCentre(i+1,:) = [scr_centre(1) - circ_diam * sin(i*2*pi/stimLocs)   scr_centre(2) - circ_diam * cos(i*2*pi/stimLocs)  scr_centre(1) - circ_diam * sin(i*2*pi/stimLocs)  scr_centre(2) - circ_diam * cos(i*2*pi/stimLocs)];
     lineVert(i+1,:) = [stimCentre(i+1,1) stimCentre(i+1,2) - lineLength/2 stimCentre(i+1,1) stimCentre(i+1,2)+lineLength/2];
     lineHorz(i+1,:) = [stimCentre(i+1,1) - lineLength/2 stimCentre(i+1,2) stimCentre(i+1,1)+lineLength/2 stimCentre(i+1,2)];
-    %lineRight(i+1,:) = [stimCentre(i+1,1) - obliqueDisp/2   stimCentre(i+1,2) + obliqueDisp/2   stimCentre(i+1,1) + obliqueDisp/2   stimCentre(i+1,2) - obliqueDisp/2];
-    %lineLeft(i+1,:) = [stimCentre(i+1,1) - obliqueDisp/2   stimCentre(i+1,2) - obliqueDisp/2   stimCentre(i+1,1) + obliqueDisp/2   stimCentre(i+1,2)  + obliqueDisp/2];
+    lineRight(i+1,:) = [stimCentre(i+1,1) - obliqueDisp/2   stimCentre(i+1,2) + obliqueDisp/2   stimCentre(i+1,1) + obliqueDisp/2   stimCentre(i+1,2) - obliqueDisp/2];
+    lineLeft(i+1,:) = [stimCentre(i+1,1) - obliqueDisp/2   stimCentre(i+1,2) - obliqueDisp/2   stimCentre(i+1,1) + obliqueDisp/2   stimCentre(i+1,2)  + obliqueDisp/2];
     
     stimRect(i+1,:,1) = stimCentre(i+1,:)+circRectVals; %stimRect(:,:,1) has all the rects for the circle stimuli
     stimRect(i+1,:,2) = stimCentre(i+1,:)+diamondRectVals; %stimRect(:,:,2) has all the rects for the diamond stimuli
@@ -158,9 +163,7 @@ for i = 0 : stimLocs - 1    % Define rects for stimuli and line segments
     %     targetRect(i+1,:) = [scr_centre(1) - circ_diam * sin(i*2*pi/stimLocs) - stim_size / 2   scr_centre(2) - circ_diam * cos(i*2*pi/stimLocs) - stim_size / 2   scr_centre(1) - circ_diam * sin(i*2*pi/stimLocs) + stim_size / 2   scr_centre(2) - circ_diam * cos(i*2*pi/stimLocs) + stim_size / 2];
     %     circleRect(i+1,:) = [scr_centre(1) - circ_diam * sin(i*2*pi/stimLocs) - circ_stim_size / 2   scr_centre(2) - circ_diam * cos(i*2*pi/stimLocs) - circ_stim_size / 2   scr_centre(1) - circ_diam * sin(i*2*pi/stimLocs) + circ_stim_size / 2   scr_centre(2) - circ_diam * cos(i*2*pi/stimLocs) + circ_stim_size / 2];
     %     lineVert(i+1,:) = [targetRect(i+1,1) + stim_size/2   targetRect(i+1,2) + (stim_size-lineLength)/2    targetRect(i+1,1) + stim_size/2    targetRect(i+1,2) + stim_size/2 + lineLength/2];
-    %     lineHorz(i+1,:) = [targetRect(i+1,1) + (stim_size-lineLength)/2   targetRect(i+1,2) + stim_size/2    targetRect(i+1,1) + stim_size/2 + lineLength/2    targetRect(i+1,2) + stim_size/2];
-    
-    
+    %     lineHorz(i+1,:) = [targetRect(i+1,1) + (stim_size-lineLength)/2   targetRect(i+1,2) + stim_size/2    targetRect(i+1,1) + stim_size/2 + lineLength/2    targetRect(i+1,2) + stim_size/2];  
 end
 
 
@@ -172,10 +175,10 @@ stimWindow = Screen('OpenOffscreenWindow', MainWindow, black);
 % Create a small offscreen window and draw the bonus multiplier into it
 bonusTex = Screen('OpenOffscreenWindow', MainWindow, yellow, [0 0 bonusWindowWidth bonusWindowHeight]);
 %Screen('FrameRect', bonusTex, yellow, [], 8);
-Screen('TextSize', bonusTex, 42);
+Screen('TextSize', bonusTex, 40);
 Screen('TextFont', bonusTex, 'Calibri');
 Screen('TextStyle', bonusTex, 1);
-DrawFormattedText(bonusTex, [num2str(bigMultiplier), ' x  bonus trial!'], 'center', 'center', black);
+DrawFormattedText(bonusTex, [num2str(bigMultiplier), ' x  bonus trial!'], 'center',  'center', black);
 
 errorTex = Screen('OpenOffscreenWindow', MainWindow, black, [0 0 bonusWindowWidth bonusWindowHeight]);
 Screen('TextSize', errorTex, 40);
@@ -202,6 +205,10 @@ else
     numTrials = exptTrials;
     if exptSession == 2
         switch condition
+            % not sure what to do with this - either:
+            % (1) can keep as a between subjects experiment where some get high/low targets in EEG phase, but all stimulus types in pre-phase
+            % (2) can keep as between subjects experiment where some get high/low targets in BOTH pre- and EEG phase
+            % (3) can make ALL within subjects, where all participants get high/low targets and high/low distractors across both phases (this is more manageable now that there are less configurations of distractors)
             case 1
                 valueLevelsPost = [1 3];
             case 2
@@ -217,7 +224,7 @@ else
     distractArrayPost = repmat(valueLevelsPost,1,exptTrialsPerBlock/length(valueLevelsPost));
     
     configArrayPre = ones(1,exptTrialsPerBlock)*5; %random configurations for pre-training blocks
-    configArrayPost = [ones(1,exptTrialsPerBlock/4) ones(1,exptTrialsPerBlock/4)*2 ones(1,exptTrialsPerBlock/4)*3 ones(1,exptTrialsPerBlock/4)*4]; %equal proportion of critical configurations for post-training blocks
+    configArrayPost = [ones(1,exptTrialsPerBlock/2) ones(1,exptTrialsPerBlock/2)*2]; % equal proportion of distractor lateral and target lateral trials. I have changed this to match with Experiment 1 - Jan raised this as a potential issue, but Martin Eimer did not seem to have any problem with it.
 end
 
 
@@ -235,11 +242,11 @@ trialCounter = 0;
 block = 1;
 trials_since_break = 0;
 
-rightPos = 7:10;
-leftPos = 2:5;
-midlinePos = [1 6];
+rightPos = [5 6];
+leftPos = [2 3];
+midlinePos = [1 4];
 
-RestrictKeysForKbCheck([KbName('4'), KbName('5')]);   % Only accept keypresses from numpad keys 4 and 5
+RestrictKeysForKbCheck([KbName('4'), KbName('5')]);   % Only accept keypresses from numpad keys 4 and 5. This is changed so that participants can sit further away from the monitor and prevent lateralised motor effects.
 
 WaitSecs(initialPause);
 
@@ -298,7 +305,7 @@ for trial = 1 : numTrials
                 availDistractorPos = rightPos;
             end
         case 5 %random configuration
-            availTargetPos = 1:10;
+            availTargetPos = 1:6;
             targetLoc = availTargetPos(randi(length(availTargetPos)));
             if distractType > 2 && distractType < 5 %target = distractor
                 availDistractorPos = targetLoc;
@@ -363,9 +370,9 @@ for trial = 1 : numTrials
     for i = 1 : stimLocs
         lineOrientation(i) = round(rand);
         if lineOrientation(i) == 0
-            Screen('DrawLine', stimWindow, gray, lineHorz(i,1), lineHorz(i,2), lineHorz(i,3), lineHorz(i,4), line_pen);
+            Screen('DrawLine', stimWindow, white, lineHorz(i,1), lineHorz(i,2), lineHorz(i,3), lineHorz(i,4), line_pen);
         else
-            Screen('DrawLine', stimWindow, gray, lineVert(i,1), lineVert(i,2), lineVert(i,3), lineVert(i,4), line_pen);
+            Screen('DrawLine', stimWindow, white, lineVert(i,1), lineVert(i,2), lineVert(i,3), lineVert(i,4), line_pen);
         end
     end
     
@@ -388,9 +395,9 @@ for trial = 1 : numTrials
     end
     
     if targetType == 1
-        Screen('DrawLine', stimWindow, gray, lineHorz(targetLoc,1), lineHorz(targetLoc,2), lineHorz(targetLoc,3), lineHorz(targetLoc,4), line_pen);
+        Screen('DrawLine', stimWindow, white, lineHorz(targetLoc,1), lineHorz(targetLoc,2), lineHorz(targetLoc,3), lineHorz(targetLoc,4), line_pen);
     else
-        Screen('DrawLine', stimWindow, gray, lineVert(targetLoc,1), lineVert(targetLoc,2), lineVert(targetLoc,3), lineVert(targetLoc,4), line_pen);
+        Screen('DrawLine', stimWindow, white, lineVert(targetLoc,1), lineVert(targetLoc,2), lineVert(targetLoc,3), lineVert(targetLoc,4), line_pen);
     end
     
 %     if testing == 1
