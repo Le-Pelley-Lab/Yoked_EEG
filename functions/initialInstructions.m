@@ -6,7 +6,7 @@ global address runEEG exptSession
 
 if runEEG == 1; outp(address,77); end %start of initial instructions trigger
 
-instructStr1 = 'On each trial a dot will appear, this is to warn you that the trial is about to start. Then a set of shapes will appear; two examples are shown below.';
+instructStr1 = 'Each trial will start with a cross on the screen. This is to warn you that the trial is about to start, you should keep your eyes fixed on the cross. Then a set of shapes will appear; two examples are shown below.';
 if keyCounterbal == 1
     word1 = 'HORIZONTAL';
     word2 = 'VERTICAL';

@@ -500,21 +500,21 @@ for trial = 1 : numTrials
     
     st = VBLTime(trial); %record start time when stimuli are presented
     
-%     image = Screen('GetImage', MainWindow, [scr_centre(1)-450 scr_centre(2)-450 scr_centre(1)+450 scr_centre(2)+450] );
-%     
-%     if singletonType == 1
-%         if distractLoc == targetLoc
-%             imwrite(image, 'exampleDiamondTargetColoured.jpg') %400 x 400
-%         else
-%             imwrite(image, 'exampleDiamondTarget.jpg')
-%         end
-%     else
-%        if distractLoc == targetLoc
-%            imwrite(image, 'exampleCircleTargetColoured.jpg') 
-%        else
-%            imwrite(image, 'exampleCircleTarget.jpg')
-%        end
-%     end
+     image = Screen('GetImage', MainWindow, [scr_centre(1)-450 scr_centre(2)-450 scr_centre(1)+450 scr_centre(2)+450] );
+     
+    % if singletonType == 1
+    %     if distractLoc == targetLoc
+    %         imwrite(image, 'exampleDiamondTargetColoured.jpg') %400 x 400
+    %     else
+    %        imwrite(image, 'exampleDiamondTarget.jpg')
+    %     end
+    % else
+    %    if distractLoc == targetLoc
+    %        imwrite(image, 'exampleCircleTargetColoured.jpg') 
+    %    else
+    %        imwrite(image, 'exampleCircleTarget.jpg')
+    %    end
+    % end
     
     %%% FOR SCREENSHOTS
     

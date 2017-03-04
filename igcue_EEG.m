@@ -21,7 +21,7 @@ global address nf runEEG testing
 
 Screen('Preference', 'VisualDebuglevel', 3); %Hides the PTB startup screen when calibrating
 
-testing = 1; % Change this to 0 when ready to run for real
+testing = 0; % Change this to 0 when ready to run for real
 
 nf = java.text.DecimalFormat;
 
