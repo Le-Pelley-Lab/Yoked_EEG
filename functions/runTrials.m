@@ -44,11 +44,11 @@ if testing == 1
     end
 else
     if exptSession == 1
-        pracTrials = 8;
-        maxBlocks = 12; % 12 * 48 = 576 pretraining trials
+        pracTrials = 2; %8;
+        maxBlocks = 1; %12; % 12 * 48 = 576 pretraining trials
     else
-        pracTrials = 32; %increased number of practice trials for eye movement training
-        maxBlocks = 36; %1728 trials total. 1296 trials of post-training. 162 trials for each trial type/configuration combo
+        pracTrials = 2; %32; %increased number of practice trials for eye movement training
+        maxBlocks = 2; %36; %1728 trials total. 1296 trials of post-training. 162 trials for each trial type/configuration combo
     end
 end
 
@@ -370,9 +370,9 @@ for trial = 1 : numTrials
     for i = 1 : stimLocs
         lineOrientation(i) = round(rand);
         if lineOrientation(i) == 0
-            Screen('DrawLine', stimWindow, white, lineHorz(i,1), lineHorz(i,2), lineHorz(i,3), lineHorz(i,4), line_pen);
+            Screen('DrawLine', stimWindow, white, lineLeft(i,1), lineLeft(i,2), lineLeft(i,3), lineLeft(i,4), line_pen);
         else
-            Screen('DrawLine', stimWindow, white, lineVert(i,1), lineVert(i,2), lineVert(i,3), lineVert(i,4), line_pen);
+            Screen('DrawLine', stimWindow, white, lineRight(i,1), lineRight(i,2), lineRight(i,3), lineRight(i,4), line_pen);
         end
     end
     
@@ -624,13 +624,13 @@ for trial = 1 : numTrials
                 triggerFB = 8;
             end
             
-            Screen('TextSize', MainWindow, 32);
-            if nextBlockType == 1
-                totalStr = format_payStr(totalPay + starting_total_points);
-            else
-                totalStr = '???  total';
-            end
-            DrawFormattedText(MainWindow, totalStr, 'center', scr_centre(2)+150, white);   
+%             Screen('TextSize', MainWindow, 32);
+%             if nextBlockType == 1
+%                 totalStr = format_payStr(totalPay + starting_total_points);
+%             else
+%                 totalStr = '???  total';
+%             end
+%             DrawFormattedText(MainWindow, totalStr, 'center', scr_centre(2)+150, white);   
         end
     end
     

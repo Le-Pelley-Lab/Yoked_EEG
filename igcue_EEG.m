@@ -42,7 +42,7 @@ KbName('UnifyKeyNames');    % Important for some reason to standardise keyboard 
 
 % Set up the parallel port for receiving the triggers
 config_io;
-address = hex2dec('378');
+address = hex2dec('D030');
 
 starting_total = 0;
 starting_total_points = 0;
