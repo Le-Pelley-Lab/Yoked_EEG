@@ -56,7 +56,11 @@ exptTrials = maxBlocks * exptTrialsBeforeBreak;
 % Session 1: 12 * exptTrialsBeforeBreak = 576;
 % Session 2: 36 * exptTrialsBeforeBreak = 1728;
 
-stimLocs = 6;       % Number of stimulus locations
+
+% Number of stimulus locations - have changed this so that there are 4 locations in the EEG session. The reason for doing this is that it will minimise the number of "lost" trials where the target and distractor are both lateral
+stimLocs(1) = 6;       
+stimLocs(2) = 4;
+
 stim_size = 104;     % Matched to Expt 1. (165) Size of diamond stimulus. = Visual angle of 2.58 dva at 60cm from screen. Slightly larger than diameter of circles, but should be equal area of grey outline
 circ_stim_size = 92; % Matched to Expt 1. (124) 3.3 degrees at 57cm
 stim_pen = 8;      % Pen width of stimuli, 0.3 dva at 57cm
@@ -138,27 +142,27 @@ obliqueDisp = round(sqrt(lineLength * lineLength / 2));
 % around an imaginary circle of diameter circ_diam
 % Also create sets of points defining the positions of the oblique and
 % target (horizontal / vertical) lines that appear inside each stimulus
-stimCentre = zeros(stimLocs,4);
-stimRect = zeros(stimLocs, 4);
-lineRight = zeros(stimLocs,4);
-lineLeft = zeros(stimLocs,4);
-lineVert = zeros(stimLocs,4);
-lineHorz = zeros(stimLocs,4);
-lineOrientation = zeros(1,stimLocs);   % Used below; preallocating for speed
+stimCentre = zeros(stimLocs(1),4,2);
+stimRect = zeros(stimLocs(1), 4, 2, 2);
+lineRight = zeros(stimLocs(1),4,2);
+lineLeft = zeros(stimLocs(1),4,2);
+lineVert = zeros(stimLocs(1),4,2);
+lineHorz = zeros(stimLocs(1),4,2);
+lineOrientation = zeros(1,stimLocs(1));   % Used below; preallocating for speed
 
 circRectVals = [-circ_stim_size/2 -circ_stim_size/2 circ_stim_size/2 circ_stim_size/2];
 diamondRectVals = [-stim_size/2 -stim_size/2 stim_size/2 stim_size/2];
 
 
-for i = 0 : stimLocs - 1    % Define rects for stimuli and line segments
-    stimCentre(i+1,:) = [scr_centre(1) - circ_diam * sin(i*2*pi/stimLocs)   scr_centre(2) - circ_diam * cos(i*2*pi/stimLocs)  scr_centre(1) - circ_diam * sin(i*2*pi/stimLocs)  scr_centre(2) - circ_diam * cos(i*2*pi/stimLocs)];
-    lineVert(i+1,:) = [stimCentre(i+1,1) stimCentre(i+1,2) - lineLength/2 stimCentre(i+1,1) stimCentre(i+1,2)+lineLength/2];
-    lineHorz(i+1,:) = [stimCentre(i+1,1) - lineLength/2 stimCentre(i+1,2) stimCentre(i+1,1)+lineLength/2 stimCentre(i+1,2)];
-    lineRight(i+1,:) = [stimCentre(i+1,1) - obliqueDisp/2   stimCentre(i+1,2) + obliqueDisp/2   stimCentre(i+1,1) + obliqueDisp/2   stimCentre(i+1,2) - obliqueDisp/2];
-    lineLeft(i+1,:) = [stimCentre(i+1,1) - obliqueDisp/2   stimCentre(i+1,2) - obliqueDisp/2   stimCentre(i+1,1) + obliqueDisp/2   stimCentre(i+1,2)  + obliqueDisp/2];
+for i = 0 : stimLocs(1) - 1    % Define rects for stimuli and line segments
+    stimCentre(i+1,:,1) = [scr_centre(1) - circ_diam * sin(i*2*pi/stimLocs(1))   scr_centre(2) - circ_diam * cos(i*2*pi/stimLocs(1))  scr_centre(1) - circ_diam * sin(i*2*pi/stimLocs(1))  scr_centre(2) - circ_diam * cos(i*2*pi/stimLocs(1))];
+    lineVert(i+1,:,1) = [stimCentre(i+1,1,1) stimCentre(i+1,2,1) - lineLength/2 stimCentre(i+1,1,1) stimCentre(i+1,2,1)+lineLength/2];
+    lineHorz(i+1,:,1) = [stimCentre(i+1,1,1) - lineLength/2 stimCentre(i+1,2,1) stimCentre(i+1,1,1)+lineLength/2 stimCentre(i+1,2,1)];
+    lineRight(i+1,:,1) = [stimCentre(i+1,1,1) - obliqueDisp/2   stimCentre(i+1,2,1) + obliqueDisp/2   stimCentre(i+1,1,1) + obliqueDisp/2   stimCentre(i+1,2,1) - obliqueDisp/2];
+    lineLeft(i+1,:,1) = [stimCentre(i+1,1,1) - obliqueDisp/2   stimCentre(i+1,2,1) - obliqueDisp/2   stimCentre(i+1,1,1) + obliqueDisp/2   stimCentre(i+1,2,1)  + obliqueDisp/2];
     
-    stimRect(i+1,:,1) = stimCentre(i+1,:)+circRectVals; %stimRect(:,:,1) has all the rects for the circle stimuli
-    stimRect(i+1,:,2) = stimCentre(i+1,:)+diamondRectVals; %stimRect(:,:,2) has all the rects for the diamond stimuli
+    stimRect(i+1,:,1,1) = stimCentre(i+1,:,1)+circRectVals; %stimRect(:,:,1,1) has all the rects for the circle stimuli in the pre-training blocks
+    stimRect(i+1,:,2,1) = stimCentre(i+1,:,1)+diamondRectVals; %stimRect(:,:,2,1) has all the rects for the diamond stimuli in the pre-training blocks
     
     %     targetRect(i+1,:) = [scr_centre(1) - circ_diam * sin(i*2*pi/stimLocs) - stim_size / 2   scr_centre(2) - circ_diam * cos(i*2*pi/stimLocs) - stim_size / 2   scr_centre(1) - circ_diam * sin(i*2*pi/stimLocs) + stim_size / 2   scr_centre(2) - circ_diam * cos(i*2*pi/stimLocs) + stim_size / 2];
     %     circleRect(i+1,:) = [scr_centre(1) - circ_diam * sin(i*2*pi/stimLocs) - circ_stim_size / 2   scr_centre(2) - circ_diam * cos(i*2*pi/stimLocs) - circ_stim_size / 2   scr_centre(1) - circ_diam * sin(i*2*pi/stimLocs) + circ_stim_size / 2   scr_centre(2) - circ_diam * cos(i*2*pi/stimLocs) + circ_stim_size / 2];
@@ -166,6 +170,16 @@ for i = 0 : stimLocs - 1    % Define rects for stimuli and line segments
     %     lineHorz(i+1,:) = [targetRect(i+1,1) + (stim_size-lineLength)/2   targetRect(i+1,2) + stim_size/2    targetRect(i+1,1) + stim_size/2 + lineLength/2    targetRect(i+1,2) + stim_size/2];  
 end
 
+for i = 0 : stimLocs(2) - 1
+    stimCentre(i+1,:,2) = [scr_centre(1) - circ_diam * sin(i*2*pi/stimLocs(2))   scr_centre(2) - circ_diam * cos(i*2*pi/stimLocs(2))  scr_centre(1) - circ_diam * sin(i*2*pi/stimLocs(2))  scr_centre(2) - circ_diam * cos(i*2*pi/stimLocs(2))];
+    lineVert(i+1,:,2) = [stimCentre(i+1,1,2) stimCentre(i+1,2,2) - lineLength/2 stimCentre(i+1,1,2) stimCentre(i+1,2,2)+lineLength/2];
+    lineHorz(i+1,:,2) = [stimCentre(i+1,1,2) - lineLength/2 stimCentre(i+1,2,2) stimCentre(i+1,1,2)+lineLength/2 stimCentre(i+1,2,2)];
+    lineRight(i+1,:,2) = [stimCentre(i+1,1,2) - obliqueDisp/2   stimCentre(i+1,2,2) + obliqueDisp/2   stimCentre(i+1,1,2) + obliqueDisp/2   stimCentre(i+1,2,2) - obliqueDisp/2];
+    lineLeft(i+1,:,2) = [stimCentre(i+1,1,2) - obliqueDisp/2   stimCentre(i+1,2,2) - obliqueDisp/2   stimCentre(i+1,1,2) + obliqueDisp/2   stimCentre(i+1,2,2)  + obliqueDisp/2];
+    
+    stimRect(i+1,:,1,2) = stimCentre(i+1,:,2)+circRectVals; %stimRect(:,:,1,2) has all the rects for the circle stimuli in the EEG blocks
+    stimRect(i+1,:,2,2) = stimCentre(i+1,:,2)+diamondRectVals; %stimRect(:,:,2,2) has all the rects for the diamond stimuli in the EEG blocks
+end
 
 % Create a full-size offscreen window that will be used for drawing all
 % stimuli and targets (and fixation cross) into
@@ -194,47 +208,37 @@ errorBoxH = errorBox(4)-errorBox(2);
 if exptPhase == 0
     numTrials = pracTrials;
     DATA.practrialInfo = zeros(pracTrials, 13);    
-    distractArrayPre = zeros(1, pracTrials);
     configArray = zeros(1, pracTrials);
-    distractArrayPre(1 : pracTrials) = 5;
-    distractArrayPost(1 : pracTrials) = 5;
+    distractArray(1 : pracTrials) = 5;
     configArray(1:pracTrials) = ones(1,pracTrials)*5;
     configArrayPre = configArray;
     configArrayPost = configArray;
 else
     numTrials = exptTrials;
-    if exptSession == 2
         switch condition
-            % not sure what to do with this - either:
-            % (1) can keep as a between subjects experiment where some get high/low targets in EEG phase, but all stimulus types in pre-phase
-            % (2) can keep as between subjects experiment where some get high/low targets in BOTH pre- and EEG phase
-            % (3) can make ALL within subjects, where all participants get high/low targets and high/low distractors across both phases (this is more manageable now that there are less configurations of distractors)
             case 1
-                valueLevelsPost = [1 3];
+                valueLevels = [1 2]; % Only High and Low Targets (i.e., Anderson style)
             case 2
-                valueLevelsPost = [2 4];
+                valueLevels = [3 4]; % Only High and Low Distractors (i.e., Le Pelley style)
         end
-    else
-        valueLevelsPost = 1:4;
-    end
-    valueLevelsPre = 1:4;
+
     DATA.expttrialInfo = zeros(exptTrials, 21);
     
-    distractArrayPre = repmat(valueLevelsPre,1,exptTrialsPerBlock/length(valueLevelsPre));
-    distractArrayPost = repmat(valueLevelsPost,1,exptTrialsPerBlock/length(valueLevelsPost));
+    distractArray = repmat(valueLevels,1,exptTrialsPerBlock/length(valueLevels));
+
     
     configArrayPre = ones(1,exptTrialsPerBlock)*5; %random configurations for pre-training blocks
-    configArrayPost = [ones(1,exptTrialsPerBlock/2) ones(1,exptTrialsPerBlock/2)*2]; % equal proportion of distractor lateral and target lateral trials. I have changed this to match with Experiment 1 - Jan raised this as a potential issue, but Martin Eimer did not seem to have any problem with it.
+    configArrayPost = [ones(1,exptTrialsPerBlock/3) ones(1,exptTrialsPerBlock/3)*2 ones(1,exptTrialsPerBlock/6)*3 ones(1,exptTrialsPerBlock/6)* 4]; % equal proportion of distractor lateral, target lateral trials, and "useless" trials (i.e., T lateral, D lateral; T midline, D midline). This is now different from Experiment 1 - Jan raised a potential issue to do with participants learning the statistical probabilities, thereby finding it easier to suppress certain locations where the distractor appeared more frequently.
 end
 
 
 totalPay = 0;
 
-tempTrialOrder(:,:,1) = [distractArrayPre' configArrayPre']; % pre-training trial order
-tempTrialOrder(:,:,2) = [distractArrayPost' configArrayPost']; % post-training trial order
+tempTrialOrder(:,:,1) = [distractArray' configArrayPre']; % pre-training trial order
+tempTrialOrder(:,:,2) = [distractArray' configArrayPost']; % post-training trial order
 
 shuffled_trialOrder = shuffleTrialorder(tempTrialOrder(:,:,1), exptPhase);   % Calls a function to shuffle the first block of trials
-nextBlockType = 1; %first block is a pre-training block
+blockType = 1; %first block is a pre-training block
 shuffled_distractArray = shuffled_trialOrder(:,1);
 shuffled_configArray = shuffled_trialOrder(:,2);
 
@@ -242,9 +246,11 @@ trialCounter = 0;
 block = 1;
 trials_since_break = 0;
 
-rightPos = [5 6];
-leftPos = [2 3];
-midlinePos = [1 4];
+%  NEED TO CHECK THAT THIS IS ACCURATE 27/07/18
+rightPos = 4; %these values are only accurate for the EEG blocks (with 4 stimulus locations)
+leftPos = 2;
+midlinePos = [1 3];
+
 
 RestrictKeysForKbCheck([KbName('4'), KbName('5')]);   % Only accept keypresses from numpad keys 4 and 5. This is changed so that participants can sit further away from the monitor and prevent lateralised motor effects.
 
@@ -287,14 +293,10 @@ for trial = 1 : numTrials
             availTargetPos = [midlinePos];
             targetLoc = availTargetPos(randi(length(availTargetPos)));
             availDistractorPos = [leftPos rightPos];
-        case 3 % lateral target, ipsilateral distractor
-            availTargetPos = [leftPos rightPos];
+        case 3 % midline target, midline distractor
+            availTargetPos = midlinePos;
             targetLoc = availTargetPos(randi(length(availTargetPos)));
-            if ismember(targetLoc, rightPos)
-                availDistractorPos = rightPos;
-            else
-                availDistractorPos = leftPos;
-            end
+            availDistractorPos = availTargetPos;
             availDistractorPos(availDistractorPos(:)==targetLoc) = [];
         case 4 %lateral target, contralateral distractor
             availTargetPos = [leftPos rightPos];
@@ -305,7 +307,7 @@ for trial = 1 : numTrials
                 availDistractorPos = rightPos;
             end
         case 5 %random configuration
-            availTargetPos = 1:6;
+            availTargetPos = 1:stimLocs(1);
             targetLoc = availTargetPos(randi(length(availTargetPos)));
             if distractType > 2 && distractType < 5 %target = distractor
                 availDistractorPos = targetLoc;
@@ -351,53 +353,53 @@ for trial = 1 : numTrials
     Screen('FillRect', stimWindow, black);  % Clear the screen from the previous trial by drawing a black rectangle over the whole thing
     Screen('DrawTexture', stimWindow, fixationTex, [], fixRect); %draw fixation dot
     
-    for i = 1 : stimLocs
+    for i = 1 : stimLocs(blockType)
         if singletonType == 1 %draw grey circles
-            Screen('FrameOval', stimWindow, gray, stimRect(i,:,1), stim_pen, stim_pen);       % Draw stimulus circles
+            Screen('FrameOval', stimWindow, gray, stimRect(i,:,1, blockType), stim_pen, stim_pen);       % Draw stimulus circles
         else %draw grey squares
-            Screen('DrawTexture', stimWindow, DiamondTex(1), [], stimRect(i,:,2));
+            Screen('DrawTexture', stimWindow, DiamondTex(1), [], stimRect(i,:,2, blockType));
         end
     end
    
     if distractLoc ~= targetLoc %if distractor /= target
         if singletonType == 1
-            Screen('DrawTexture', stimWindow, CircleTex(distractType+1), [], stimRect(distractLoc,:,2));      % Draw distractor circle
+            Screen('DrawTexture', stimWindow, CircleTex(distractType+1), [], stimRect(distractLoc,:,2, blockType));      % Draw distractor circle
         else
-            Screen('DrawTexture', stimWindow, DiamondTex(distractType+1), [], stimRect(distractLoc,:,2)); %draw distractor diamond
+            Screen('DrawTexture', stimWindow, DiamondTex(distractType+1), [], stimRect(distractLoc,:,2, blockType)); %draw distractor diamond
         end
     end
     
-    for i = 1 : stimLocs
+    for i = 1 : stimLocs(blockType)
         lineOrientation(i) = round(rand);
         if lineOrientation(i) == 0
-            Screen('DrawLine', stimWindow, white, lineLeft(i,1), lineLeft(i,2), lineLeft(i,3), lineLeft(i,4), line_pen);
+            Screen('DrawLine', stimWindow, white, lineLeft(i,1,blockType), lineLeft(i,2,blockType), lineLeft(i,3,blockType), lineLeft(i,4,blockType), line_pen);
         else
-            Screen('DrawLine', stimWindow, white, lineRight(i,1), lineRight(i,2), lineRight(i,3), lineRight(i,4), line_pen);
+            Screen('DrawLine', stimWindow, white, lineRight(i,1,blockType), lineRight(i,2,blockType), lineRight(i,3,blockType), lineRight(i,4,blockType), line_pen);
         end
     end
     
     if distractLoc ~= targetLoc %if distractor /= target
         if singletonType == 1
-            Screen('FillRect', stimWindow, black, stimRect(targetLoc,:,2));
-            Screen('DrawTexture', stimWindow, DiamondTex(1), [], stimRect(targetLoc,:,2)); %draw diamond target
+            Screen('FillRect', stimWindow, black, stimRect(targetLoc,:,2, blockType));
+            Screen('DrawTexture', stimWindow, DiamondTex(1), [], stimRect(targetLoc,:,2, blockType)); %draw diamond target
         else
-            Screen('FillRect', stimWindow, black, stimRect(targetLoc,:,2));
-            Screen('DrawTexture', stimWindow, CircleTex(1), [], stimRect(targetLoc,:,2)); %draw circle target
+            Screen('FillRect', stimWindow, black, stimRect(targetLoc,:,2, blockType));
+            Screen('DrawTexture', stimWindow, CircleTex(1), [], stimRect(targetLoc,:,2, blockType)); %draw circle target
         end
     else
         if singletonType == 1
-            Screen('FillRect', stimWindow, black, stimRect(targetLoc,:,2));
-            Screen('DrawTexture', stimWindow, DiamondTex(distractType+1), [], stimRect(targetLoc,:,2)); %draw diamond coloured target
+            Screen('FillRect', stimWindow, black, stimRect(targetLoc,:,2, blockType));
+            Screen('DrawTexture', stimWindow, DiamondTex(distractType+1), [], stimRect(targetLoc,:,2, blockType)); %draw diamond coloured target
         else
-            Screen('FillRect', stimWindow, black, stimRect(targetLoc,:,2));
-            Screen('DrawTexture', stimWindow, CircleTex(distractType+1), [], stimRect(targetLoc, :, 2)); %draw circle coloured target
+            Screen('FillRect', stimWindow, black, stimRect(targetLoc,:,2, blockType));
+            Screen('DrawTexture', stimWindow, CircleTex(distractType+1), [], stimRect(targetLoc, :, 2, blockType)); %draw circle coloured target
         end
     end
     
     if targetType == 1
-        Screen('DrawLine', stimWindow, white, lineHorz(targetLoc,1), lineHorz(targetLoc,2), lineHorz(targetLoc,3), lineHorz(targetLoc,4), line_pen);
+        Screen('DrawLine', stimWindow, white, lineHorz(targetLoc,1,blockType), lineHorz(targetLoc,2,blockType), lineHorz(targetLoc,3, blockType), lineHorz(targetLoc,4,blockType), line_pen);
     else
-        Screen('DrawLine', stimWindow, white, lineVert(targetLoc,1), lineVert(targetLoc,2), lineVert(targetLoc,3), lineVert(targetLoc,4), line_pen);
+        Screen('DrawLine', stimWindow, white, lineVert(targetLoc,1,blockType), lineVert(targetLoc,2,blockType), lineVert(targetLoc,3, blockType), lineVert(targetLoc,4, blockType), line_pen);
     end
     
 %     if testing == 1
@@ -447,7 +449,7 @@ for trial = 1 : numTrials
         if exptPhase == 0
             triggerOn = triggerOn + 200; %trigger is 200 for all practice trials
         elseif exptPhase == 1
-            if nextBlockType == 2 %if post-training (EEG) block
+            if blockType == 2 %if post-training (EEG) block
                 triggerOn = triggerOn + 100;
             end
             switch distractType
@@ -597,7 +599,7 @@ for trial = 1 : numTrials
             end
             
             if winMultiplier(distractType) == bigMultiplier
-                if nextBlockType == 1
+                if blockType == 1
                     Screen('DrawTexture', MainWindow, bonusTex, [], [scr_centre(1)-bonusWindowWidth/2   bonusWindowTop   scr_centre(1)+bonusWindowWidth/2    bonusWindowTop+bonusWindowHeight]);
                 end
             end
@@ -605,7 +607,7 @@ for trial = 1 : numTrials
             
             if correct == 0
                 totalPay = totalPay - trialPay;
-                if nextBlockType == 1
+                if blockType == 1
                     fbStr = ['Lose ', char(nf.format(trialPay)), ' points'];
                     Screen('DrawTexture', MainWindow, errorTex, errorBox, [scr_centre(1)-50-errorBoxW   scr_centre(2)-errorBoxH/2   scr_centre(1)-50    scr_centre(2)+errorBoxH/2]);
                     Screen('DrawTexture', MainWindow, errorTex', errorBox, [scr_centre(1)+50    scr_centre(2)-errorBoxH/2   scr_centre(1)+50+errorBoxW     scr_centre(2)+errorBoxH/2]);
@@ -616,7 +618,7 @@ for trial = 1 : numTrials
                 triggerFB = 9;
             elseif correct == 1
                 totalPay = totalPay + trialPay;
-                if nextBlockType == 1
+                if blockType == 1
                     fbStr = ['+', char(nf.format(trialPay)), ' points'];
                 else
                     fbStr = 'correct';
@@ -625,7 +627,7 @@ for trial = 1 : numTrials
             end
             
 %             Screen('TextSize', MainWindow, 32);
-%             if nextBlockType == 1
+%             if blockType == 1
 %                 totalStr = format_payStr(totalPay + starting_total_points);
 %             else
 %                 totalStr = '???  total';
@@ -671,14 +673,14 @@ for trial = 1 : numTrials
         if mod(trial, exptTrialsPerBlock) == 0
             if exptSession == 2
                 if  rem(block, preFrequency) == 0
-                    nextBlockType = 1; %next block type is a pretraining block
+                    blockType = 1; %next block type is a pretraining block
                 else
-                    nextBlockType = 2; %next block type is a post-training block
+                    blockType = 2; %next block type is a post-training block
                 end
             else
-                nextBlockType = 1;
+                blockType = 1;
             end
-            shuffled_trialOrder = shuffleTrialorder(tempTrialOrder(:,:,nextBlockType), exptPhase);   % Calls a function to shuffle trials
+            shuffled_trialOrder = shuffleTrialorder(tempTrialOrder(:,:,blockType), exptPhase);   % Calls a function to shuffle trials
             shuffled_distractArray = shuffled_trialOrder(:,1);
             shuffled_configArray = shuffled_trialOrder(:,2);
             trialCounter = 0;
@@ -687,7 +689,7 @@ for trial = 1 : numTrials
         
         if (mod(trial, exptTrialsBeforeBreak) == 0 && trial ~= numTrials);
             save(datafilename, 'DATA');
-            take_a_break(nextBlockType, breakDuration, initialPause, totalPay, block, maxBlocks);
+            take_a_break(blockType, breakDuration, initialPause, totalPay, block, maxBlocks);
             trials_since_break = 0;
         end
         
@@ -740,18 +742,18 @@ end
 
 
 
-function take_a_break(nextBlockType, breakDur, pauseDur, currentTotal, nextBlockNum, maxBlockNum)
+function take_a_break(blockType, breakDur, pauseDur, currentTotal, nextBlockNum, maxBlockNum)
 
-global MainWindow white address runEEG exptSession starting_total_points nf yellow testing
+global MainWindow white address runEEG exptSession starting_total_points nf yellow testing condition
 
 if exptSession == 2
-    if nextBlockType == 1 %next block is a pre-training block
+    if blockType == 1 %next block is a pre-training block
         breakText = ['Time for a break\n\nSit back, relax for a moment! The experimenter will restart the task in a few moments\n\nIn the next block, the target MAY or MAY NOT be coloured.'...
-            '\n\nYou WILL be told how many points you won or lost after each trial.\n\nRemember that the faster you make correct responses, the more you will earn in this task!'];
+            '\n\nYou WILL be earning points in the next block.\n\nRemember that the faster you make correct responses, the more you will earn in this task!'];
         totalText = ['\n\nSo far you have earned ' char(nf.format(currentTotal + starting_total_points)) ' points.'];
     else %next block is a post-training block
         breakText = ['Time for a break\n\nSit back, relax for a moment! The experimenter will restart the task in a few moments\n\nIn the next block, the target WILL NEVER be coloured.'...
-            '\n\nYou WILL NOT be told how many points you won or lost after each trial. But you will still be earning points!\n\nRemember that the faster you make correct responses, the more you will earn in this task!'];
+            '\n\nYou WILL NOT be earning points in the next block.'];
         totalText = ['\n\nSo far you have earned ' char(nf.format(currentTotal + starting_total_points)) ' points.'];
     end
 else

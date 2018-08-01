@@ -21,7 +21,7 @@ global address nf runEEG testing
 
 Screen('Preference', 'VisualDebuglevel', 3); %Hides the PTB startup screen when calibrating
 
-testing = 0; % Change this to 0 when ready to run for real
+testing = 1; % Change this to 0 when ready to run for real
 
 nf = java.text.DecimalFormat;
 
@@ -60,7 +60,7 @@ while inputError == 1
     p_number = input('Participant number  ---> ');
     exptSession = input('Session number ---> ');
     
-    datafilename = ['ExptData\CirclesEEGYokedAnalogueDataP', num2str(p_number), 'S'];
+    datafilename = ['ExptData\CirclesEEGv2DataP', num2str(p_number), 'S'];
     
     if exist([datafilename, num2str(exptSession), '.mat'], 'file') == 2
         disp(['Session ', num2str(exptSession), ' data for participant ', num2str(p_number),' already exist'])
@@ -84,8 +84,8 @@ if exptSession == 1
         condition = input('Condition (1-2)--->');
     end
     colBalance = 0;
-    while colBalance < 1 || colBalance > 4
-        colBalance = input('Counterbalance (1-4)---> ');
+    while colBalance < 1 || colBalance > 2
+        colBalance = input('Counterbalance (1-2)---> ');
     end
     
     p_age = input('Participant age ---> ');
@@ -203,13 +203,13 @@ distract_col(5,:) = yellow;       % Practice colour
 if colBalance == 1
     distract_col(1,:) = orange;    % High-value distractor colour
     distract_col(2,:) = blue;      % Low-value distractor colour
-    distract_col(3,:) = green;     % High-value target colour
-    distract_col(4,:) = pink;      % Low-value target colour
+    distract_col(3,:) = orange;     % High-value target colour
+    distract_col(4,:) = blue;      % Low-value target colour
 elseif colBalance == 2
     distract_col(1,:) = blue; 
     distract_col(2,:) = orange;
-    distract_col(3,:) = pink;
-    distract_col(4,:) = green;
+    distract_col(3,:) = blue;
+    distract_col(4,:) = orange;
 elseif colBalance == 3
     distract_col(1,:) = green;
     distract_col(2,:) = pink;
@@ -270,6 +270,7 @@ if exptSession == 2
     awareTest;
 end
 
+%% THIS WILL NEED TO BE CHANGED - CONDITION NOW JUST DETERMINED WHETHER THE VALUE STIMULI ARE TRAINED AS TARGETS OR AS DISTRACTORS
 if condition == 1
     bonus_payment = bonus_points * 0.0037; % convert points into cents at rate of 1 point = 0.0037 cents.
 else
