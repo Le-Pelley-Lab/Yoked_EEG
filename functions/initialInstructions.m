@@ -2,7 +2,7 @@
 function initialInstructions()
 
 global keyCounterbal MainWindow white
-global address runEEG exptSession
+global address runEEG exptSession condition
 
 if runEEG == 1; outp(address,77); end %start of initial instructions trigger
 
@@ -15,13 +15,21 @@ else
     word2 = 'HORIZONTAL';
 end
 
-instructStr2 = ['Each of these shapes contains a line. Your task is to respond to the line that is contained inside the UNIQUE SHAPE. On some trials, this target shape will be a DIAMOND. On other trials, this target shape will be a CIRCLE.\n\nEach trial will also contain a coloured shape, on some trials one of the NON-TARGET SHAPES will be coloured. On other trials, the TARGET will be coloured.'];
+if exptSession == 1
+    targetStr = 'UNIQUE SHAPE. On some trials, this target shape will be a DIAMOND. On other trials, this target shape will be a CIRCLE';
+    colourStr = '';
+else
+    targetStr = 'DIAMOND SHAPE';
+    colourStr = 'IMPORTANT: In this version of the task, the target will never be coloured. So you should try your best to avoid looking at the coloured shape.'
+end
+
+instructStr2 = ['Each of these shapes contains a line. Your task is to respond to the line that is contained inside the ', targetStr,'. ', colourStr];
 instructStr3 = ['If the line inside the target is ', word1,', you should press the "4" button on the number pad with your right index finger. If the line is ',word2,', you should press the "5" button on the number pad with your right middle finger.'];
 
 if exptSession == 2
-    instructStr4 = 'You should respond as fast as you can, but you should try to avoid making errors.\n\nPlease keep your eyes fixated on the dot in the centre of the screen throughout the task. This allows us to get better EEG recordings, and is also quickest way to locate the target.\n\nThe experimenter will give you feedback on how many eye movements you are making. If you make too many eye movements, the experimenter will cancel the rest of the experiment and you will not be able to earn more points.';
+    instructStr4 = 'You should respond as fast as you can, but you should try to avoid making errors.\n\nPlease keep your eyes fixated on the cross in the centre of the screen throughout the task. This allows us to get better EEG recordings, and is also quickest way to locate the target.\n\nThe experimenter will give you feedback on how many eye movements you are making. If you make too many eye movements, the experimenter will cancel the rest of the experiment and you will not be able to earn more points.';
 else
-    instructStr4 = 'You should respond as fast as you can, but you should try to avoid making errors.\n\nPlease keep your eyes fixated on the dot in the centre of the screen throughout the task. This will allow us to get better EEG recordings in the second session, so it is important to practice now. It is also quickest way to locate the target.';
+    instructStr4 = 'You should respond as fast as you can, but you should try to avoid making errors.\n\nPlease keep your eyes fixated on the cross in the centre of the screen throughout the task. This will allow us to get better EEG recordings in the second session, so it is important to practice now. It is also quickest way to locate the target.';
 end
 show_Instructions(1, instructStr1);
 show_Instructions(2, instructStr2);

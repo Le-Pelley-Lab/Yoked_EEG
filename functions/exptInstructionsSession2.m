@@ -17,28 +17,28 @@ else
     word2 = 'HORIZONTAL';
 end
 
-instructStr1 = ['The rest of this experiment is similar to the task that you completed yesterday. On each trial, you should respond to the line that is contained inside the UNIQUE SHAPE.\n\nIf the line is ', word1,', you should press the left button. If the line is ',word2,', you should press the right button.'];
+instructStr1 = ['The rest of this experiment is similar to the task that you completed yesterday. On each trial, you should respond to the line that is contained inside the DIAMOND SHAPE.\n\nIf the line is ', word1,', you should press the left button. If the line is ',word2,', you should press the right button.'];
 
-instructStr2 = ['From now on, you will be able to earn money for correct responses, depending on how fast you respond. For every millisecond that your response time (RT) is faster than ', num2str(zeroPayRT), 'ms, you will earn 1 point.'];
+instructStr2 = ['In this version of the task, you will not be earning money for correct responses. However, you should still aim to respond as fast as you can.'];
 
-instructStr3 = ['IMPORTANT:  Some of the trials will be BONUS trials! On these trials the amount that you win or lose will be multiplied by ', num2str(bigMultiplier),'.'];
+%instructStr3 = ['IMPORTANT:  Some of the trials will be BONUS trials! On these trials the amount that you win or lose will be multiplied by ', num2str(bigMultiplier),'.'];
 
-instructStr4 = 'On some blocks, you will be told how many points you won or lost after each trial, and the total points earned so far in the experiment.\n\nHowever, on other blocks, you will not be told how many points you have won or lost until the break screen. You will still be earning points on these trials, so it is important that you continue to try and respond as quickly as possible while still remaining accurate.\n\nAt the end of each session of the experiment, the points that you have earned will be converted into money, and you will be shown how much you have earned so far.\n\nMost participants are able to earn between $20 and $35 across both sessions of the experiment.';
+%instructStr4 = 'On some blocks, you will be told how many points you won or lost after each trial, and the total points earned so far in the experiment.\n\nHowever, on other blocks, you will not be told how many points you have won or lost until the break screen. You will still be earning points on these trials, so it is important that you continue to try and respond as quickly as possible while still remaining accurate.\n\nAt the end of each session of the experiment, the points that you have earned will be converted into money, and you will be shown how much you have earned so far.\n\nMost participants are able to earn between $20 and $35 across both sessions of the experiment.';
 
-instructStr5 = 'IMPORTANT: Some blocks of the task will be the same as the previous session, where the target MAY or MAY NOT be coloured.\n\nHowever, in other blocks, the target will NEVER be coloured, so you should ignore any coloured shapes in these blocks.';
+instructStr3 = 'IMPORTANT: Some blocks of the task will be the same as in the previous session, and you will earn points for these trials.\n\nThere will be instructions prior to the start of these blocks, so you will know that the task has changed.';
 
 
 if exptSession == 2
-instructStr6 = ['So far, you have earned $', num2str(starting_total, '%0.2f')];
+instructStr4 = ['So far, you have earned $', num2str(starting_total, '%0.2f')];
 end
 
 show_Instructions(1, instructStr1, 8);      % 8
 show_Instructions(2, instructStr2, 12);     % 12
 show_Instructions(3, instructStr3, 12);     % 12
-show_Instructions(4, instructStr4, 6);      % 6
-show_Instructions(5, instructStr5, 6);
+%show_Instructions(4, instructStr4, 6);      % 6
+%show_Instructions(5, instructStr5, 6);
 if exptSession == 2
-    DrawFormattedText(MainWindow, instructStr6, 'center', 'center', white);
+    DrawFormattedText(MainWindow, instructStr4, 'center', 'center', white);
     Screen(MainWindow, 'Flip')
     RestrictKeysForKbCheck(KbName('Space'));
     KbWait([], 2);

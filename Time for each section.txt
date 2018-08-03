@@ -1,0 +1,5 @@
+Total time for session 1 (assuming 550 ms average RT and short breaks = 25 mins). Round up to 40 mins to be generous.
+
+Total time for session 2 (assuming 550 ms average RT and short breaks = ~73 mins). Round up to 90 mins to be generous
+
+Total = 130 mins (2hr, 10min) of testing time. 3 hr time slot should be sufficient.

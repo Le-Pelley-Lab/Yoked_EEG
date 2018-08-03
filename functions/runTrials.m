@@ -17,8 +17,8 @@ timeoutDuration = 2;     % 2 timeout duration
 iti = 0;            % 0.1
 onscreenAfterResponse = 0.1; %time that display remains onscreen after response
 minOnscreenTime = 0.6;
-correctFBDuration = [0.7, 1];       %[0.001, 0.001]    [0.7, 1]  Practice phase feedback duration  1 Main task feedback duration
-errorFBDuration = [0.7, 1];       %[0.001, 0.001]      [0.7, 1.5]  Practice phase feedback duration  1.5 Main task feedback duration
+correctFBDuration = [0.7, 1];       % [0.7, 1]  Practice phase feedback duration  1 Main task feedback duration
+errorFBDuration = [0.7, 1];       % [0.7, 1.5]  Practice phase feedback duration  1.5 Main task feedback duration
 
 minFixation = 0.8;         % 0.8   Minimum fixation duration
 maxFixation = 1.2;         % 1.2   Maximum fixation duration
@@ -31,30 +31,30 @@ exptTrialsPerBlock = 48;    % 48. This is used to ensure people encounter the ri
 exptTrialsBeforeBreak = exptTrialsPerBlock;     % 2 * exptTrialsPerBlock = 64
 
 if exptSession == 2
-    preFrequency = 4; %4 - every 4th block will be a "pre-training" block. Block 1,5,9 etc.
+    preFrequency = 5; %5 - every 5th block will be a "pre-training" block. Block 5,10,15,20 
 end
 
 if testing == 1
     if exptSession == 1
-        pracTrials = 0;
-        maxBlocks = 2;
+        pracTrials = 8;
+        maxBlocks = 10;
     else
-        pracTrials = 0;
-        maxBlocks = 4;
+        pracTrials = 20;
+        maxBlocks = 24;
     end
 else
     if exptSession == 1
-        pracTrials = 2; %8;
-        maxBlocks = 1; %12; % 12 * 48 = 576 pretraining trials
+        pracTrials = 8; %8;
+        maxBlocks = 10; %1; % 10 * 48 = 480 pretraining trials
     else
-        pracTrials = 2; %32; %increased number of practice trials for eye movement training
-        maxBlocks = 2; %36; %1728 trials total. 1296 trials of post-training. 162 trials for each trial type/configuration combo
+        pracTrials = 20; %20; %increased number of practice trials for eye movement training
+        maxBlocks = 29; %29; %1392 trials total. 1152 trials of post-training. 192 trials for each trial type/configuration combo (lateral D, midline T; lateral T, midline D; "junk" configurations)
     end
 end
 
 exptTrials = maxBlocks * exptTrialsBeforeBreak; 
-% Session 1: 12 * exptTrialsBeforeBreak = 576;
-% Session 2: 36 * exptTrialsBeforeBreak = 1728;
+% Session 1: 10 * exptTrialsBeforeBreak = 480;
+% Session 2: 24 * exptTrialsBeforeBreak = 1152;
 
 
 % Number of stimulus locations - have changed this so that there are 4 locations in the EEG session. The reason for doing this is that it will minimise the number of "lost" trials where the target and distractor are both lateral
@@ -237,8 +237,15 @@ totalPay = 0;
 tempTrialOrder(:,:,1) = [distractArray' configArrayPre']; % pre-training trial order
 tempTrialOrder(:,:,2) = [distractArray' configArrayPost']; % post-training trial order
 
-shuffled_trialOrder = shuffleTrialorder(tempTrialOrder(:,:,1), exptPhase);   % Calls a function to shuffle the first block of trials
-blockType = 1; %first block is a pre-training block
+
+if exptSession == 1
+    blockType = 1; % all blocks are pre-training blocks
+else
+    blockType = 2; %first block is a post-training block, every 5th block will be a pre-training block
+end
+
+shuffled_trialOrder = shuffleTrialorder(tempTrialOrder(:,:,blockType), exptPhase);   % Calls a function to shuffle the first block of trials
+
 shuffled_distractArray = shuffled_trialOrder(:,1);
 shuffled_configArray = shuffled_trialOrder(:,2);
 
@@ -262,6 +269,19 @@ FlipTime = zeros(1,numTrials);
 Missed = zeros(1,numTrials);
 
 for trial = 1 : numTrials
+
+    switch blockType
+    case 1
+        rightPos = [5 6];
+        leftPos = [2 3];
+        midlinePos = [1 4];
+    case 2
+        %  NEED TO CHECK THAT THIS IS ACCURATE 27/07/18
+        rightPos = 4; %these values are only accurate for the EEG blocks (with 4 stimulus locations)
+        leftPos = 2;
+        midlinePos = [1 3];
+    end
+
     maxPriorityLvl = MaxPriority(MainWindow); %find out what the maximum priority level available is
     Priority(maxPriorityLvl); % Set PTB to higher priority level
     
@@ -282,7 +302,11 @@ for trial = 1 : numTrials
     distractType = shuffled_distractArray(trialCounter);
     targetType = randi(2); %orientation of line within target
     
-    singletonType = randi(2); %randomly determine whether diamond or circle target
+    if exptSession == 1
+        singletonType = randi(2); %randomly determine whether diamond or circle target
+    else
+        singletonType = 1;
+    end
     
     switch shuffled_configArray(trialCounter)
         case 1 %lateral target, midline distractor
@@ -592,7 +616,7 @@ for trial = 1 : numTrials
             
             roundRT = round(rt);    % Divide RT by 10 and round to nearest integer. Changed so that numbers of points don't get huge.
             
-            if roundRT >= zeroPayRT
+            if roundRT >= zeroPayRT || blockType == 2 % only reward participants on pre-training blocks
                 trialPay = 0;
             else
                 trialPay = round((zeroPayRT - roundRT)/10) * winMultiplier(distractType); % Changed so that number of points given is (1000-RT)/10 x Multiplier
@@ -671,6 +695,7 @@ for trial = 1 : numTrials
         DATA.FlipTime = FlipTime;
         DATA.Missed = Missed;
         if mod(trial, exptTrialsPerBlock) == 0
+            block = block + 1;
             if exptSession == 2
                 if  rem(block, preFrequency) == 0
                     blockType = 1; %next block type is a pretraining block
@@ -684,7 +709,6 @@ for trial = 1 : numTrials
             shuffled_distractArray = shuffled_trialOrder(:,1);
             shuffled_configArray = shuffled_trialOrder(:,2);
             trialCounter = 0;
-            block = block + 1;
         end
         
         if (mod(trial, exptTrialsBeforeBreak) == 0 && trial ~= numTrials);
@@ -748,12 +772,12 @@ global MainWindow white address runEEG exptSession starting_total_points nf yell
 
 if exptSession == 2
     if blockType == 1 %next block is a pre-training block
-        breakText = ['Time for a break\n\nSit back, relax for a moment! The experimenter will restart the task in a few moments\n\nIn the next block, the target MAY or MAY NOT be coloured.'...
+        breakText = ['Time for a break\n\nSit back, relax for a moment! The experimenter will restart the task in a few moments\n\nIn the next block, the target is the UNIQUE SHAPE.'...
             '\n\nYou WILL be earning points in the next block.\n\nRemember that the faster you make correct responses, the more you will earn in this task!'];
         totalText = ['\n\nSo far you have earned ' char(nf.format(currentTotal + starting_total_points)) ' points.'];
     else %next block is a post-training block
-        breakText = ['Time for a break\n\nSit back, relax for a moment! The experimenter will restart the task in a few moments\n\nIn the next block, the target WILL NEVER be coloured.'...
-            '\n\nYou WILL NOT be earning points in the next block.'];
+        breakText = ['Time for a break\n\nSit back, relax for a moment! The experimenter will restart the task in a few moments\n\nIn the next block, the target is the DIAMOND SHAPE.'...
+            '\n\nYou will not be earning points in the next block. But you should try your best to respond quickly.'];
         totalText = ['\n\nSo far you have earned ' char(nf.format(currentTotal + starting_total_points)) ' points.'];
     end
 else
@@ -776,6 +800,7 @@ if exptSession == 1
     DrawFormattedText(MainWindow, 'Please place your right index and middle fingers on the 4 and 5 keys\n\nand press the spacebar when you are ready to continue', 'center', 'center' , white);
     Screen(MainWindow, 'Flip');
 else
+    WaitSecs(breakDur);
     RestrictKeysForKbCheck(KbName('t')); %Only accept "T", for experimenter to continue
 end
 

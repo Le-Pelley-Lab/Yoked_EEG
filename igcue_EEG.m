@@ -1,6 +1,8 @@
 
 clear all
 
+tic;
+
 %Screen('Preference', 'SkipSyncTests', 2 );      % Skips the Psychtoolbox calibrations - REMOVE THIS WHEN RUNNING FOR REAL!
 Screen('CloseAll');
 
@@ -304,6 +306,8 @@ end
 
 DrawFormattedText(MainWindow, finalStr, 'center', 'center' , white);
 Screen(MainWindow, 'Flip');
+
+totalTime = toc;
 
 RestrictKeysForKbCheck(KbName('q'));   % Only accept Q key to quit
 KbWait([], 2);

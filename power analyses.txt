@@ -1,0 +1,53 @@
+Taken from G*Power 3.1.9.2
+
+Calculated on 3/8/18 by Daniel Pearson
+
+F tests - ANOVA: Repeated measures, within-between interaction
+Analysis:	A priori: Compute required sample size 
+Input:	Effect size f	=	0.2526456
+	α err prob	=	0.05
+	Power (1-β err prob)	=	0.80
+	Number of groups	=	2
+	Number of measurements	=	2
+	Corr among rep measures	=	0.5
+	Nonsphericity correction ε	=	1
+Output:	Noncentrality parameter λ	=	8.6808527
+	Critical F	=	4.1490974
+	Numerator df	=	1.0000000
+	Denominator df	=	32.0000000
+	Total sample size	=	34
+	Actual power	=	0.8151184
+
+This tells us that a total sample size of 34 should give us 81.5% power to detect a medium effect size within-between interaction
+
+[16] -- Friday, August 03, 2018 -- 10:57:06
+F tests - ANOVA: Repeated measures, within factors
+Analysis:	A priori: Compute required sample size 
+Input:	Effect size f	=	0.27
+	α err prob	=	0.05
+	Power (1-β err prob)	=	0.80
+	Number of groups	=	1
+	Number of measurements	=	2
+	Corr among rep measures	=	0.5
+	Nonsphericity correction ε	=	1
+Output:	Noncentrality parameter λ	=	8.4564000
+	Critical F	=	4.1959718
+	Numerator df	=	1.0000000
+	Denominator df	=	28.0000000
+	Total sample size	=	29
+	Actual power	=	0.8015104
+
+This analysis tells us that a sample size of 29 needed for each of the groups to detect an effect size of d = 0.54 to Pd (found in the previous EEG study). Qi et al's previous study found an effect size approx equal to d = 2.5 for N2pc to reward-associated distractor (but did not compare high-val vs low-val, only N2pc to high-val). This would require a sample size of 4 for 80% power.
+
+[17] -- Friday, August 03, 2018 -- 10:59:39
+t tests - Means: Difference between two dependent means (matched pairs)
+Analysis:	A priori: Compute required sample size 
+Input:	Tail(s)	=	Two
+	Effect size dz	=	2.5
+	α err prob	=	0.05
+	Power (1-β err prob)	=	0.80
+Output:	Noncentrality parameter δ	=	5.0000000
+	Critical t	=	3.1824463
+	Df	=	3
+	Total sample size	=	4
+	Actual power	=	0.8986059
