@@ -331,12 +331,12 @@ for trial = 1 : numTrials
                 availDistractorPos = rightPos;
             end
         case 5 %random configuration
-            availTargetPos = 1:stimLocs(1);
+            availTargetPos = 1:stimLocs(blockType);
             targetLoc = availTargetPos(randi(length(availTargetPos)));
             if distractType > 2 && distractType < 5 %target = distractor
                 availDistractorPos = targetLoc;
             elseif distractType == 5
-                if randi(2) == 1
+                if condition == 1 && exptSession == 1 % if Anderson style, show coloured targets during practice for Session 1, but not Session 2.
                     availDistractorPos = targetLoc;
                 else
                     availDistractorPos = availTargetPos;
@@ -526,7 +526,7 @@ for trial = 1 : numTrials
     
     st = VBLTime(trial); %record start time when stimuli are presented
     
-     image = Screen('GetImage', MainWindow, [scr_centre(1)-450 scr_centre(2)-450 scr_centre(1)+450 scr_centre(2)+450] );
+     %image = Screen('GetImage', MainWindow, [scr_centre(1)-450 scr_centre(2)-450 scr_centre(1)+450 scr_centre(2)+450] );
      
     % if singletonType == 1
     %     if distractLoc == targetLoc
@@ -552,8 +552,11 @@ for trial = 1 : numTrials
     %         imwrite(image, 'distractImage.png');
     %     end
     
+    Screen('DrawTexture', MainWindow, fixationTex, [], fixRect);
+
     if testing == 1
-        et = WaitSecs(0.55);
+        Screen(MainWindow, 'Flip', st + .1);
+        et = WaitSecs(0.45);
         timeout = 0;
         if rand > .05
             if targetType == 1
@@ -569,7 +572,24 @@ for trial = 1 : numTrials
             end
         end
     else
-        [keyCode, et, timeout] = accKbWait(st, timeoutDuration);
+        while KbCheck; end %this should catch anybody holding down the button, essentially waits until all keys are released
+        keyIsDown = 0;
+        timeout = 0;
+        searchDisplayRemoved = 0;
+        while keyIsDown == 0
+            timeoutCheck = GetSecs;
+            [keyIsDown, et, keyCode, deltasecs] = KbCheck; %replaced KbWait with this, as KbWait checks the keyboard every 5 ms - not great for RT differences
+            if timeoutCheck - st > timeoutDuration
+                timeout = 1;
+                break;
+            elseif timeoutCheck - st > .1 && searchDisplayRemoved == 0 && blockType == 2
+                Screen(MainWindow, 'Flip');
+                searchDisplayRemoved = 1;
+            end
+
+        
+        end
+        %[keyCode, et, timeout] = accKbWait(st, timeoutDuration);
         keyCodePressed = find(keyCode, 1, 'first');
     end
     

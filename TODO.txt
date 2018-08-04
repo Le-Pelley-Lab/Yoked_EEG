@@ -33,5 +33,9 @@ TO DO:
 - Adjust total number of trials so that we get a nice even number (Y)
 - Include block number somewhere on FB screen so that experimenter knows how long is left in the experiment. (Y)
 - Fix up awareness test (Y)
+
+POSSIBLE TO DO 04/08/18:
+- Set grey and coloured distractors to similar luminance levels.  This should help with any differences in sensory energy that we get, that might cause lateralised effects.
+- Set search display to timeout after 100ms? This could help deal with eye-movements. Only during post-training or during pre-training as well? Leaning towards only post-, because it will allow for more learning about colours in pre-training phase.
 - Change so don't show reward feedback on post-training trials (Y)
 - Check onset delay
