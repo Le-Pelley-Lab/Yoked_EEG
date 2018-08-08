@@ -23,7 +23,7 @@ instructStr2 = ['From now on, you will be able to earn money for correct respons
 
 instructStr3 = ['IMPORTANT:  Some of the trials will be BONUS trials! On these trials the amount that you win or lose will be multiplied by ', num2str(bigMultiplier),'.'];
 
-instructStr4 = 'After each response you will be told how many points you won or lost, and the total points earned so far in this experiment.\n\nAt the end of each session of the experiment, the points that you have earned will be converted into money, and you will be shown how much you have earned so far.\n\nMost participants are able to earn between $20 and $35 across both sessions of the experiment.';
+instructStr4 = 'After each response you will be told how many points you won or lost, and the total points earned so far in this experiment.\n\nAt the end of each session of the experiment, the points that you have earned will be converted into money, and you will be shown how much you have earned so far.\n\nMost participants are able to earn between $15 and $25 across both sessions of the experiment.';
 
 if exptSession == 2
 instructStr5 = ['So far, you have earned $', num2str(starting_total, '%0.2f')];

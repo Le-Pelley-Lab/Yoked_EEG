@@ -10,6 +10,7 @@ global zeroPayRT testing
 global stim_size stim_pen
 global address exptSession nf
 global runEEG condition
+global shortDisplayVersion
 
 standardPriority = Priority;
 
@@ -217,9 +218,9 @@ else
     numTrials = exptTrials;
         switch condition
             case 1
-                valueLevels = [1 2]; % Only High and Low Targets (i.e., Anderson style)
+                valueLevels = [1 2]; % Only High and Low Distractors (i.e., LePelley style)
             case 2
-                valueLevels = [3 4]; % Only High and Low Distractors (i.e., Le Pelley style)
+                valueLevels = [3 4]; % Only High and Low Targets (i.e., Anderson style)
         end
 
     DATA.expttrialInfo = zeros(exptTrials, 21);
@@ -336,7 +337,7 @@ for trial = 1 : numTrials
             if distractType > 2 && distractType < 5 %target = distractor
                 availDistractorPos = targetLoc;
             elseif distractType == 5
-                if condition == 1 && exptSession == 1 % if Anderson style, show coloured targets during practice for Session 1, but not Session 2.
+                if condition == 2 && exptSession == 1 % if Anderson style, show coloured targets during practice for Session 1, but not Session 2.
                     availDistractorPos = targetLoc;
                 else
                     availDistractorPos = availTargetPos;
@@ -582,7 +583,7 @@ for trial = 1 : numTrials
             if timeoutCheck - st > timeoutDuration
                 timeout = 1;
                 break;
-            elseif timeoutCheck - st > .1 && searchDisplayRemoved == 0 && blockType == 2
+            elseif timeoutCheck - st > .1 && searchDisplayRemoved == 0 && blockType == 2 && shortDisplayVersion == 1
                 Screen(MainWindow, 'Flip');
                 searchDisplayRemoved = 1;
             end
@@ -706,9 +707,9 @@ for trial = 1 : numTrials
     
     
     if exptPhase == 0
-        DATA.practrialInfo(trial,:) = [exptSession, trial, targetLoc, targetType, distractLoc, distractType, singletonType, shuffled_configArray(trialCounter), timeout, correct, rt, fix_pause, triggerOn];
+        DATA.practrialInfo(trial,:) = [exptSession, trial, blockType, targetLoc, targetType, distractLoc, distractType, singletonType, shuffled_configArray(trialCounter), timeout, correct, rt, fix_pause, triggerOn];
     else
-        DATA.expttrialInfo(trial,:) = [exptSession, block, trial, trialCounter, trials_since_break, targetLoc, targetType, distractLoc, distractType, singletonType, shuffled_configArray(trialCounter), timeout, correct, rt, roundRT, trialPay, totalPay, fix_pause, targetHem, distractHem, triggerOn];
+        DATA.expttrialInfo(trial,:) = [exptSession, block, blockType, trial, trialCounter, trials_since_break, targetLoc, targetType, distractLoc, distractType, singletonType, shuffled_configArray(trialCounter), timeout, correct, rt, roundRT, trialPay, totalPay, fix_pause, targetHem, distractHem, triggerOn];
         DATA.ifi = ifi;
         DATA.VBLTime = VBLTime;
         DATA.StimOnsetTime = StimOnsetTime;
@@ -760,11 +761,6 @@ acceptShuffle = 0;
 while acceptShuffle == 0
     shuffArray = inArray(randperm(length(inArray)),:);     % Shuffle order of distractors
     acceptShuffle = 1;   % Shuffle always OK in practice phase
-    if ePhase == 1
-        if shuffArray(1,1) > 2 || shuffArray(2,1) > 2
-            acceptShuffle = 0;   % Reshuffle if either of the first two trials (which may well be discarded) are rare types
-        end
-    end
 end
 
 end

@@ -53,7 +53,7 @@ function show_Instructions(instrTrial, insStr)
 
 global MainWindow scr_centre black white instrWin condition exptSession yellow
 
-if condition == 1
+if condition == 2
     imL1 = imread('exampleDiamondTargetColoured.jpg', 'jpg');
     imR1 = imread('exampleCircleTargetColoured.jpg', 'jpg');
     imL2 = imread('exampleDiamondTargetColoured-T.jpg', 'jpg');
