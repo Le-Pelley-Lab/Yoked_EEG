@@ -208,7 +208,7 @@ errorBoxH = errorBox(4)-errorBox(2);
 
 if exptPhase == 0
     numTrials = pracTrials;
-    DATA.practrialInfo = zeros(pracTrials, 13);    
+    DATA.practrialInfo = zeros(pracTrials, 14);    
     configArray = zeros(1, pracTrials);
     distractArray(1 : pracTrials) = 5;
     configArray(1:pracTrials) = ones(1,pracTrials)*5;
@@ -223,7 +223,7 @@ else
                 valueLevels = [3 4]; % Only High and Low Targets (i.e., Anderson style)
         end
 
-    DATA.expttrialInfo = zeros(exptTrials, 21);
+    DATA.expttrialInfo = zeros(exptTrials, 22);
     
     distractArray = repmat(valueLevels,1,exptTrialsPerBlock/length(valueLevels));
 

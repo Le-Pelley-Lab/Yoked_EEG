@@ -1,0 +1,17 @@
+F tests - ANOVA: Repeated measures, within-between interaction
+Analysis:	Post hoc: Compute achieved power 
+Input:	Effect size f	=	0.20
+	? err prob	=	0.05
+	Total sample size	=	60
+	Number of groups	=	2
+	Number of measurements	=	2
+	Corr among rep measures	=	.5
+	Nonsphericity correction ?	=	1
+Output:	Noncentrality parameter ?	=	9.6000000
+	Critical F	=	4.0068729
+	Numerator df	=	1.0000000
+	Denominator df	=	58.0000000
+	Power (1-? err prob)	=	0.8614225
+
+
+Bayesian stopping rule, BF = 6 in favor of either hypothesis?
