@@ -178,6 +178,7 @@ datafilename = [datafilename, num2str(exptSession),'.mat'];
 res = [scrWidth scrHeight];
 scr_centre = res / 2;
 
+%PsychDebugWindowConfiguration();
 MainWindow = Screen(screenNum, 'OpenWindow', [], [], 32);
 
 DATA.frameRate = round(Screen(MainWindow, 'FrameRate'));
