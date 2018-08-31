@@ -3,8 +3,8 @@ function awareInstructions()
 
 global bigMultiplier
 
-instructStr1 = ['During this experiment, whether each trial was a \n"', num2str(bigMultiplier),' x bonus" trial or not was determined by the colour of the coloured circle that appeared on that trial. When certain colours appeared in the display, it would be a \n"', num2str(bigMultiplier), ' x bonus" trial, and when other colours appeared it would not be.'];
-instructStr1 = [instructStr1, '\n\nIn the final phase we will test what you have learned about the different colours of circles.'];
+instructStr1 = ['On trials where points were available, whether each trial was a "', num2str(bigMultiplier),' x bonus" trial or not was determined by the colour of the coloured shape that appeared on that trial. When certain colours appeared in the display, it would be a "', num2str(bigMultiplier), ' x bonus" trial, and when other colours appeared it would not be.'];
+instructStr1 = [instructStr1, '\n\nIn the final phase we will test what you have learned about the different colours of shapes.'];
 
 
 show_Instructions(1, instructStr1, 12);      % 12

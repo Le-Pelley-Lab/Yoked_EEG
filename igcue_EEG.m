@@ -3,7 +3,6 @@ clear all
 
 tic;
 
-%Screen('Preference', 'SkipSyncTests', 2 );      % Skips the Psychtoolbox calibrations - REMOVE THIS WHEN RUNNING FOR REAL!
 Screen('CloseAll');
 
 Beeper;
@@ -24,9 +23,13 @@ global shortDisplayVersion
 
 Screen('Preference', 'VisualDebuglevel', 3); %Hides the PTB startup screen when calibrating
 
-testing = 0; % Change this to 0 when ready to run for real
+testing = 1; % Change this to 0 when ready to run for real
 shortDisplayVersion = 0; % Change this to 1 if want to run a version where search display is only presented for 100ms (might be useful for reducing eye movements).
 nf = java.text.DecimalFormat;
+
+if testing == 1
+    Screen('Preference', 'SkipSyncTests', 2 );      % Skips the Psychtoolbox calibrations - REMOVE THIS WHEN RUNNING FOR REAL!
+end
 
 
 screens = Screen('Screens');
@@ -275,7 +278,7 @@ if exptSession == 2
 end
 
 %% THIS WILL NEED TO BE CHANGED - CONDITION NOW JUST DETERMINED WHETHER THE VALUE STIMULI ARE TRAINED AS TARGETS OR AS DISTRACTORS
-bonus_payment = bonus_points * 0.0112; % convert points into cents at rate of 1 point = 0.0112 cents.
+bonus_payment = bonus_points * 0.0126; % convert points into cents at rate of 1 point = 0.0126 cents.
 
 bonus_payment = 10 * ceil(bonus_payment/10);        % ... round this value UP to nearest 10 cents
 bonus_payment = bonus_payment / 100;    % ... then convert back to dollars

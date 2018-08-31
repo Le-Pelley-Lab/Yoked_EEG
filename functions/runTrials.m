@@ -41,7 +41,7 @@ if testing == 1
         maxBlocks = 10;
     else
         pracTrials = 20;
-        maxBlocks = 24;
+        maxBlocks = 1;
     end
 else
     if exptSession == 1
@@ -545,13 +545,11 @@ for trial = 1 : numTrials
     
     %%% FOR SCREENSHOTS
     
-    %     image = Screen('GetImage', MainWindow);
-    %
-    %     if targetHem == 1
-    %         imwrite(image, 'targetImage.png');
-    %     elseif distractHem == 1
-    %         imwrite(image, 'distractImage.png');
-    %     end
+        % image = Screen('GetImage', MainWindow);
+    
+        
+        % imwrite(image, 'sess2Image.png');
+       
     
     Screen('DrawTexture', MainWindow, fixationTex, [], fixRect);
 
@@ -795,7 +793,7 @@ if exptSession == 2
             '\n\nYou WILL be earning points in the next block.\n\nRemember that the faster you make correct responses, the more you will earn in this task!'];
         totalText = ['\n\nSo far you have earned ' char(nf.format(currentTotal + starting_total_points)) ' points.'];
     else %next block is a post-training block
-        breakText = ['Time for a break\n\nSit back, relax for a moment! The experimenter will restart the task in a few moments\n\nIn the next block, the target is the DIAMOND SHAPE.'...
+        breakText = ['Time for a break\n\nSit back, relax for a moment! You will be able to carry on in ', num2str(breakDur),' seconds\n\nIn the next block, the target is the DIAMOND SHAPE.'...
             '\n\nYou will not be earning points in the next block. But you should try your best to respond quickly.'];
         totalText = ['\n\nSo far you have earned ' char(nf.format(currentTotal + starting_total_points)) ' points.'];
     end
@@ -813,7 +811,7 @@ DrawFormattedText(MainWindow, blocksLeftText, 1870, 50, [80 80 80], [], [], [], 
 
 Screen(MainWindow, 'Flip'); if runEEG == 1; outp(address,254); WaitSecs(.002); outp(address, 0); end %send break trigger
 
-if exptSession == 1
+if blockType == 1
     WaitSecs(breakDur);
     RestrictKeysForKbCheck(KbName('Space'));   % Only accept spacebar
     DrawFormattedText(MainWindow, 'Please place your right index and middle fingers on the 4 and 5 keys\n\nand press the spacebar when you are ready to continue', 'center', 'center' , white);

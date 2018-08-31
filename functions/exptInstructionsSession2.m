@@ -17,7 +17,7 @@ else
     word2 = 'HORIZONTAL';
 end
 
-instructStr1 = ['The rest of this experiment is similar to the task that you completed yesterday. On each trial, you should respond to the line that is contained inside the DIAMOND SHAPE.\n\nIf the line is ', word1,', you should press the left button. If the line is ',word2,', you should press the right button.'];
+instructStr1 = ['The rest of this experiment is similar to the task that you just completed. On each trial, you should respond to the line that is contained inside the DIAMOND SHAPE.\n\nIf the line is ', word1,', you should press the left button. If the line is ',word2,', you should press the right button.'];
 
 instructStr2 = ['In this version of the task, you will not be earning money for correct responses. However, you should still aim to respond as fast as you can.'];
 
@@ -80,24 +80,18 @@ destInstrBox = [scr_centre(1) - instrBox_width / 2   textTop   scr_centre(1) + i
 
 Screen('DrawTexture', MainWindow, instrWin, instrBox, destInstrBox);
 
-if instrTrial == 2
-    extraStr1 = 'These points will be used to calculate the amount of money that you will receive at the end of the experiment.';
-    extraStr2 = '\n\nSo the faster you make correct responses, the more you will earn. However, if you make an error you will LOSE the corresponding amount.';
-    [~, ny, ~] = DrawFormattedText(MainWindow, extraStr1, scr_centre(1) - instrBox_width / 2, textTop + instrBox_height + 100, yellow, 60, [], [], 1.5);
-    DrawFormattedText(MainWindow, extraStr2, scr_centre(1) - instrBox_width / 2, ny, white, 60, [], [], 1.5);
-end
+%if instrTrial == 2
+    %extraStr1 = 'These points will be used to calculate the amount of money that you will receive at the end of the experiment.';
+    %extraStr2 = '\n\nSo the faster you make correct responses, the more you will earn. However, if you make an error you will LOSE the corresponding amount.';
+    %[~, ny, ~] = DrawFormattedText(MainWindow, extraStr1, scr_centre(1) - instrBox_width / 2, textTop + instrBox_height + 100, yellow, 60, [], [], 1.5);
+    %DrawFormattedText(MainWindow, extraStr2, scr_centre(1) - instrBox_width / 2, ny, white, 60, [], [], 1.5);
+%end
 
 
-if instrTrial == 3 || instrTrial == 5
-    if instrTrial == 3
-        if exptSession == 1
-            extraStr = ['So you will earn much more for correct responses on \n"', num2str(bigMultiplier), ' x bonus" trials than on standard trials. However, you will not be told whether a trial was a "', num2str(bigMultiplier), ' x bonus" trial until after you have made your response.'];
-        else
-            extraStr = ['So you will earn much more for correct responses on \n"', num2str(bigMultiplier), ' x bonus" trials than on standard trials.'];
-        end
-    else
-        extraStr = ['There will be instructions on the screen and from the experimenter between blocks to let you know which type of block will be next.\n\nIn the first block, the target MAY or MAY NOT be coloured.']; 
-    end
+if instrTrial == 5
+    
+    extraStr = ['There will be instructions on the screen and from the experimenter between blocks to let you know which type of block will be next.\n\nIn the first block, the target MAY or MAY NOT be coloured.']; 
+    
     DrawFormattedText(MainWindow, extraStr, scr_centre(1) - instrBox_width / 2, textTop + instrBox_height + 100, white, 60, [], [], 1.5);
 end
 

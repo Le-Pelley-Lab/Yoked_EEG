@@ -9,7 +9,7 @@ global stim_size stim_pen
 
 awareTest_iti = 1;
 
-testColours = 4;
+testColours = 2;
 
 valButtonWidth = 300;
 valButtonHeight = 130;
@@ -101,7 +101,7 @@ ShowCursor('Arrow');
 
 for trial = 1 : testColours
     
-    instructStr1 = ['What type of trial was it when one of the circles was ', colourName(trialOrder(trial), 1:colourNameLength(trialOrder(trial))),'?'];
+    instructStr1 = ['What type of trial was it when one of the shapes was ', colourName(trialOrder(trial), 1:colourNameLength(trialOrder(trial))),'?'];
     
     DrawFormattedText(MainWindow, instructStr1, 'center', 50, white, 50, [], [], 1.5);
     oldTextSize = Screen('TextSize', MainWindow, 28);
