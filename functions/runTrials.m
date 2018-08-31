@@ -208,7 +208,7 @@ errorBoxH = errorBox(4)-errorBox(2);
 
 if exptPhase == 0
     numTrials = pracTrials;
-    DATA.practrialInfo = zeros(pracTrials, 13);    
+    DATA.practrialInfo = zeros(pracTrials, 14);    
     configArray = zeros(1, pracTrials);
     distractArray(1 : pracTrials) = 5;
     configArray(1:pracTrials) = ones(1,pracTrials)*5;
@@ -223,7 +223,7 @@ else
                 valueLevels = [3 4]; % Only High and Low Targets (i.e., Anderson style)
         end
 
-    DATA.expttrialInfo = zeros(exptTrials, 21);
+    DATA.expttrialInfo = zeros(exptTrials, 22);
     
     distractArray = repmat(valueLevels,1,exptTrialsPerBlock/length(valueLevels));
 
@@ -472,7 +472,7 @@ for trial = 1 : numTrials
         triggerOn = 0;
         triggerFB = 0;
         if exptPhase == 0
-            triggerOn = triggerOn + 200; %trigger is 200 for all practice trials
+            %triggerOn = triggerOn + 200; %trigger is 200 for all practice trials
         elseif exptPhase == 1
             if blockType == 2 %if post-training (EEG) block
                 triggerOn = triggerOn + 100;
@@ -519,11 +519,11 @@ for trial = 1 : numTrials
     
     Screen('DrawTexture', MainWindow, stimWindow);
     
-    
+    triggerOn
     %Now saving a bunch of timestamps for the stimulus presentation. This
     %allows us to check for timing issues from the PTB end
     [VBLTime(trial) StimOnsetTime(trial) FlipTime(trial) Missed(trial)] = Screen(MainWindow, 'Flip', fixOn + (waitframes-0.5) * ifi); 
-    if runEEG == 1; outp(address, triggerOn); end % Send ON trigger
+    if runEEG == 1; outp(address, triggerOn); WaitSecs(.002); outp(address, 0); end % Send ON trigger
     
     st = VBLTime(trial); %record start time when stimuli are presented
     
@@ -597,11 +597,14 @@ for trial = 1 : numTrials
     Priority(standardPriority); %Revert to standard priority level for less important stuff
   
     if keyCodePressed == 100
-        if runEEG == 1; outp(address, 5); end %left response trigger
+        5
+        if runEEG == 1; outp(address, 205); WaitSecs(.002); outp(address, 0);end %left response trigger
     elseif keyCodePressed == 101
-        if runEEG == 1; outp(address, 6); end %right response trigger
+        6
+        if runEEG == 1; outp(address, 206);WaitSecs(.002); outp(address, 0); end %right response trigger
     else
-        if runEEG == 1; outp(address, 7); end %no response trigger
+        7
+        if runEEG == 1; outp(address, 207);WaitSecs(.002); outp(address, 0); end %no response trigger
     end
     
     keyPressed = KbName(keyCodePressed); %Get the name of the key that was pressed
@@ -614,7 +617,7 @@ for trial = 1 : numTrials
         trialPay = 0;
         Beeper;
         fbStr = 'TOO SLOW\n\nPlease try to respond faster';
-        
+        triggerFB = 207;
     else
         
         fbStr = 'ERROR';
@@ -660,7 +663,7 @@ for trial = 1 : numTrials
                     fbStr = 'ERROR';
                 end
                 trialPay = -trialPay;   % This is so it records correctly in the data file
-                triggerFB = 9;
+                triggerFB = 209;
             elseif correct == 1
                 totalPay = totalPay + trialPay;
                 if blockType == 1
@@ -668,7 +671,7 @@ for trial = 1 : numTrials
                 else
                     fbStr = 'correct';
                 end
-                triggerFB = 8;
+                triggerFB = 208;
             end
             
 %             Screen('TextSize', MainWindow, 32);
@@ -693,8 +696,8 @@ for trial = 1 : numTrials
     WaitSecs(minOnscreenTime-(GetSecs-st));
     % search display must remain onscreen for at least 600ms, helps avoid
     % offset ERPs for trials with fast responses.
-
-    Screen('Flip', MainWindow); if runEEG == 1; outp(address, triggerFB); end
+    triggerFB
+    Screen('Flip', MainWindow); if runEEG == 1; outp(address, triggerFB); WaitSecs(.002); outp(address, 0); end
     if correct == 0
         WaitSecs(correctFBDuration(exptPhase + 1));
     else
@@ -808,7 +811,7 @@ blocksLeftText = num2str(maxBlockNum-(nextBlockNum-1));
 DrawFormattedText(MainWindow, totalText, 'center', ny, yellow, 50, [], [], 1.5);
 DrawFormattedText(MainWindow, blocksLeftText, 1870, 50, [80 80 80], [], [], [], 1.5); % Displays the number of blocks remaining in upper right corner of break screen.
 
-Screen(MainWindow, 'Flip'); if runEEG == 1; outp(address,254); end %send break trigger
+Screen(MainWindow, 'Flip'); if runEEG == 1; outp(address,254); WaitSecs(.002); outp(address, 0); end %send break trigger
 
 if exptSession == 1
     WaitSecs(breakDur);
@@ -823,7 +826,7 @@ end
 if testing ~= 1
     KbWait([], 2);
 end
-if runEEG == 1; outp(address,255); end %send continue after break trigger
+if runEEG == 1; outp(address,255); WaitSecs(.002); outp(address, 0); end %send continue after break trigger
 Screen(MainWindow, 'Flip');
 
 RestrictKeysForKbCheck([KbName('4'), KbName('5')]);   % Only accept keypresses from keys 4 and 5
