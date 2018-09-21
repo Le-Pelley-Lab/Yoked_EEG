@@ -41,7 +41,7 @@ if testing == 1
         maxBlocks = 10;
     else
         pracTrials = 20;
-        maxBlocks = 1;
+        maxBlocks = 5;
     end
 else
     if exptSession == 1
@@ -303,7 +303,7 @@ for trial = 1 : numTrials
     distractType = shuffled_distractArray(trialCounter);
     targetType = randi(2); %orientation of line within target
     
-    if exptSession == 1
+    if blockType == 1 % if a pre-training trial (all of session 1 or pre-training blocks of session 2)
         singletonType = randi(2); %randomly determine whether diamond or circle target
     else
         singletonType = 1;
@@ -813,12 +813,14 @@ Screen(MainWindow, 'Flip'); if runEEG == 1; outp(address,254); WaitSecs(.002); o
 
 if blockType == 1
     WaitSecs(breakDur);
-    RestrictKeysForKbCheck(KbName('Space'));   % Only accept spacebar
-    DrawFormattedText(MainWindow, 'Please place your right index and middle fingers on the 4 and 5 keys\n\nand press the spacebar when you are ready to continue', 'center', 'center' , white);
+    RestrictKeysForKbCheck(KbName('t'));   % Only accept "t", for experimenter to continue
+    DrawFormattedText(MainWindow, 'Please place your right index and middle fingers on the 4 and 5 keys,\n\nThe experimenter will restart the task in a few moments', 'center', 'center' , white);
     Screen(MainWindow, 'Flip');
 else
     WaitSecs(breakDur);
-    RestrictKeysForKbCheck(KbName('t')); %Only accept "T", for experimenter to continue
+    RestrictKeysForKbCheck(KbName('Space')); %Only accept "spacebar", for participant to continue
+    DrawFormattedText(MainWindow, 'Please place your right index and middle fingers on the 4 and 5 keys,\n\nand press spacebar to continue', 'center', 'center' , white);
+    Screen(MainWindow, 'Flip');
 end
 
 if testing ~= 1

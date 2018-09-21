@@ -23,7 +23,7 @@ global shortDisplayVersion
 
 Screen('Preference', 'VisualDebuglevel', 3); %Hides the PTB startup screen when calibrating
 
-testing = 1; % Change this to 0 when ready to run for real
+testing = 0; % Change this to 0 when ready to run for real
 shortDisplayVersion = 0; % Change this to 1 if want to run a version where search display is only presented for 100ms (might be useful for reducing eye movements).
 nf = java.text.DecimalFormat;
 
